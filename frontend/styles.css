@@ -1,0 +1,63 @@
+body {
+    background-color: white;
+    height: 100%;
+}
+
+.non-selectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#header {
+    background-color: #2f4f4f;
+    font-size: 18pt;
+    color: white;
+    padding: 5pt;
+}
+
+#contact {
+    background-color: white;
+    color: black;
+    border-top: 3px black;
+}
+
+#footer {
+    background-color: #1351d8;
+    font-size: 18pt;
+    color: white;
+    padding: 5pt;
+}
+
+#programming-button {
+    font-size: 20pt;
+    background-color: #C81D11
+}
+
+#algorithms-button {
+    font-size: 20pt;
+    background-color: #1034A6;
+}
+
+#mathematics-button {
+    font-size: 20pt;
+    background-color: #FF7538;
+}
+
+.flex-grow {
+    flex: 1 0 auto;
+}
+
+.page-style {
+    font-size: 12pt;
+    padding: 5pt;
+}
+
+#mathematics-page-style {
+    font-size: 12pt;
+    margin-top: 10px;
+    /* background-image: url('images/formulas.jpg'); */
+}

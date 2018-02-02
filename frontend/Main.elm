@@ -1,6 +1,6 @@
 import Html exposing (..)
-import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
+import Html.Attributes exposing (style, class, href, type_, rel)
 
 import Bootstrap.CDN as CDN
 
@@ -9,26 +9,23 @@ import Bootstrap.Grid.Row as Row
 import Bootstrap.Grid.Col as Col
 
 import Styles exposing (..)
-
--- MODEL
-
-type Page = Programming | Algorithms | Mathematics
-
-type alias Model = Page
-
-type Msg = ProgrammingClicked | AlgorithmsClicked | MathematicsClicked
+import Model exposing (..)
+import Pages exposing (..)
 
 initialState : (Model, Cmd msg)
-initialState = (Programming, Cmd.none)
+initialState = ({ page = PageMathematics }, Cmd.none)
 
 -- UPDATE
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        ProgrammingClicked -> (Programming, Cmd.none)
-        AlgorithmsClicked  -> (Algorithms, Cmd.none)
-        MathematicsClicked -> (Mathematics, Cmd.none)
+    let
+        newPage = case msg of
+            ProgrammingClicked -> PageProgramming
+            AlgorithmsClicked  -> PageAlgorithms
+            MathematicsClicked -> PageMathematics
+    in
+        ({ model | page = newPage }, Cmd.none)
 
 -- SUBS     
 
@@ -36,58 +33,64 @@ subscriptions : Model -> Sub Msg
 subscriptions model = Sub.none
 
 -- VIEW
-
-dynamicBgColour : Model -> Html.Attribute Msg
-dynamicBgColour model =
-    let
-        color_ = 
-            case model of 
-                Programming -> seaGreen
-                Algorithms  -> irishGreen
-                Mathematics -> jungleGreen
-    in
-        style [("background-color", color_)]
-
 createHeader : Model -> Html.Html Msg
-createHeader model =
+createHeader _ =
     Grid.row [Row.centerXs, Row.attrs [headerStyle]] [
         Grid.col [Col.xs3, Col.attrs [nonSelectable]]
         [
             text "Учиме и положуваме"
         ],
         Grid.col [Col.xs3, Col.attrs [programmingStyle, nonSelectable,
-                                        onClick ProgrammingClicked]
+                                      onClick ProgrammingClicked]
                     ] [text "Програмирање"],
         Grid.col [Col.xs3, Col.attrs [algorithmsStyle, nonSelectable,
-                                        onClick AlgorithmsClicked]
+                                      onClick AlgorithmsClicked]
                     ] [text "Алгоритми"],
         Grid.col [Col.xs3, Col.attrs [mathStyle, nonSelectable,
-                                        onClick MathematicsClicked]
+                                      onClick MathematicsClicked]
                     ][text "Mатематика"]
     ]
 
-createContent : Model -> Html.Html Msg
-createContent model =
-    case model of 
-        Programming ->
-            text "Programming"
-        Algorithms ->
-            text "Algorithms"
-        Mathematics ->
-            text "Mathematics"
+createContact : Model -> Html.Html Msg
+createContact _ = 
+    Grid.row [Row.attrs [contactStyle]] [
+        Grid.col [Col.xs6, Col.attrs [class "text-left"]] [
+            text "Telephone : 076 648 258"
+        ],
+        Grid.col [Col.xs6, Col.attrs [class "text-right"]] [
+            text "E-mail : aleksandar.jovanov.1995@gmail.com"
+        ]
+    ]
+
+createFooter : Model -> Html.Html Msg
+createFooter _ =
+    Grid.row [Row.attrs [footerStyle]] [
+        Grid.col [Col.xs12] [
+            text "Made by Aleksandar Jovanov with Elm and Bootstrap"
+        ]
+    ]
 
 view : Model -> Html.Html Msg
 view model =
- Grid.containerFluid [dynamicBgColour model] 
+ Grid.containerFluid [class "d-flex flex-column h-100"] 
  [
      CDN.stylesheet,
-     createHeader model,
-     Grid.row [Row.middleXs, Row.centerXs] 
-     [
-         Grid.col [Col.xs12] [
-             createContent model
-         ]
+     node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
+     div [class "d-flex flex-column flex-grow"] [
+        createHeader model,
+        Grid.row [Row.attrs [class "bg-info h-100 flex-grow"]] 
+        [
+            Grid.col [Col.xs12] [
+                case model.page of 
+                    PageProgramming -> pageProgramming model
+                    PageAlgorithms  -> pageAlgorithms model
+                    PageMathematics -> pageMathematics model
+             ]
+        ],
+        createContact model,
+        createFooter model
      ]
+     
  ]
 
 main : Program Never Model Msg
