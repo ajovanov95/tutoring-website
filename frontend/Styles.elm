@@ -11,6 +11,8 @@ nonSelectable = class "non-selectable"
 headerStyle : Style msg
 headerStyle = id "header"
 
+brandStyle = id "brand"
+
 footerStyle : Style msg
 footerStyle = id "footer"
 
@@ -28,6 +30,12 @@ mathStyle = id "mathematics-button"
 
 pageStyle : Style msg
 pageStyle = class "page-style"
+
+progPageStyle : Style msg
+progPageStyle = id "programming-page-style"
+
+algoPageStyle : Style msg 
+algoPageStyle = id "algorithms-page-style"
 
 mathPageStyle : Style msg
 mathPageStyle = id "mathematics-page-style"

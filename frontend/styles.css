@@ -1,4 +1,4 @@
-body {
+html, body {
     background-color: white;
     height: 100%;
 }
@@ -14,15 +14,24 @@ body {
 
 #header {
     background-color: #2f4f4f;
-    font-size: 18pt;
+    font-size: 16pt;
     color: white;
-    padding: 5pt;
+    border-bottom: 5px #1351d8 solid;
+}
+
+#brand {
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 0.33em;
+    font-weight: bold;
+    font-size: 18pt;
 }
 
 #contact {
-    background-color: white;
+    /* background-color: rgb(96, 182, 38); */
+    background-color: rgb(226, 224, 224);
     color: black;
-    border-top: 3px black;
+    padding: 0.75em;
 }
 
 #footer {
@@ -33,31 +42,33 @@ body {
 }
 
 #programming-button {
-    font-size: 20pt;
-    background-color: #C81D11
+    font-size: 17pt;
+    padding: 0.5em;
 }
 
 #algorithms-button {
-    font-size: 20pt;
-    background-color: #1034A6;
+    font-size: 17pt;
+    padding: 0.5em;
 }
 
 #mathematics-button {
-    font-size: 20pt;
-    background-color: #FF7538;
-}
-
-.flex-grow {
-    flex: 1 0 auto;
+    font-size: 17pt;
+    padding: 0.5em;
 }
 
 .page-style {
     font-size: 12pt;
-    padding: 5pt;
+    padding: 1em;
+}
+
+#programming-page-style {
+    background: rgb(219, 181, 12);
+}
+
+#algorithms-page-style {
+    background: rgb(211, 214, 4);
 }
 
 #mathematics-page-style {
-    font-size: 12pt;
-    margin-top: 10px;
-    /* background-image: url('images/formulas.jpg'); */
+    background: rgb(228, 224, 27);
 }

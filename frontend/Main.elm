@@ -4,16 +4,13 @@ import Html.Attributes exposing (style, class, href, type_, rel)
 
 import Bootstrap.CDN as CDN
 
-import Bootstrap.Grid as Grid
-import Bootstrap.Grid.Row as Row
-import Bootstrap.Grid.Col as Col
-
+import Flex exposing (..)
 import Styles exposing (..)
 import Model exposing (..)
 import Pages exposing (..)
 
 initialState : (Model, Cmd msg)
-initialState = ({ page = PageMathematics }, Cmd.none)
+initialState = ({ page = PageProgramming }, Cmd.none)
 
 -- UPDATE
 
@@ -32,66 +29,64 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model = Sub.none
 
+-- Change header button background to blue if it is active
+bgActive : Model -> Page -> Attribute Msg
+bgActive model page = 
+    if model.page == page 
+    then style [("background-color", "#1351d8")]
+    else style [("background-color", "#2f4f4f")] 
+
 -- VIEW
 createHeader : Model -> Html.Html Msg
-createHeader _ =
-    Grid.row [Row.centerXs, Row.attrs [headerStyle]] [
-        Grid.col [Col.xs3, Col.attrs [nonSelectable]]
-        [
-            text "Учиме и положуваме"
-        ],
-        Grid.col [Col.xs3, Col.attrs [programmingStyle, nonSelectable,
-                                      onClick ProgrammingClicked]
-                    ] [text "Програмирање"],
-        Grid.col [Col.xs3, Col.attrs [algorithmsStyle, nonSelectable,
-                                      onClick AlgorithmsClicked]
-                    ] [text "Алгоритми"],
-        Grid.col [Col.xs3, Col.attrs [mathStyle, nonSelectable,
-                                      onClick MathematicsClicked]
-                    ][text "Mатематика"]
+createHeader model =
+    horizontalContainer [w100, headerStyle, flexNoWrap] [
+        div [flexBasis "20%", nonSelectable, brandStyle] [text "Учиме и положуваме"],
+        div [flexBasis "5%"] [], -- separator
+        div [flexBasis "25%", nonSelectable, class "text-center", 
+             bgActive model PageProgramming,
+             programmingStyle, onClick ProgrammingClicked] 
+            [text "Програмирање"],
+        div [flexBasis "25%", nonSelectable, class "text-center",
+             bgActive model PageAlgorithms,
+             algorithmsStyle, onClick AlgorithmsClicked] 
+            [text "Алгоритми"],
+        div [flexBasis "25%", nonSelectable, class "text-center",
+            bgActive model PageMathematics,
+             mathStyle, onClick MathematicsClicked] 
+            [text "Математика"]
     ]
 
 createContact : Model -> Html.Html Msg
 createContact _ = 
-    Grid.row [Row.attrs [contactStyle]] [
-        Grid.col [Col.xs6, Col.attrs [class "text-left"]] [
-            text "Telephone : 076 648 258"
-        ],
-        Grid.col [Col.xs6, Col.attrs [class "text-right"]] [
-            text "E-mail : aleksandar.jovanov.1995@gmail.com"
-        ]
-    ]
-
-createFooter : Model -> Html.Html Msg
-createFooter _ =
-    Grid.row [Row.attrs [footerStyle]] [
-        Grid.col [Col.xs12] [
-            text "Made by Aleksandar Jovanov with Elm and Bootstrap"
-        ]
+    horizontalContainer [contactStyle, flexWrap, w100] [
+        div [class "text-left", flexBasis "50%"] 
+            [text "076 648 258"],
+        div [class "text-right", flexBasis "50%"] 
+            [text "aleksandar.jovanov.1995@gmail.com"]
     ]
 
 view : Model -> Html.Html Msg
 view model =
- Grid.containerFluid [class "d-flex flex-column h-100"] 
- [
-     CDN.stylesheet,
-     node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
-     div [class "d-flex flex-column flex-grow"] [
-        createHeader model,
-        Grid.row [Row.attrs [class "bg-info h-100 flex-grow"]] 
-        [
-            Grid.col [Col.xs12] [
-                case model.page of 
-                    PageProgramming -> pageProgramming model
-                    PageAlgorithms  -> pageAlgorithms model
-                    PageMathematics -> pageMathematics model
-             ]
-        ],
-        createContact model,
-        createFooter model
-     ]
-     
- ]
+    verticalContainer [h100] [
+        -- STYLESHEETS
+        CDN.stylesheet,
+        node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
+
+        -- HEADER
+        div [w100] [createHeader model],
+
+        -- MAIN CONTENT
+        let (page, chosenStyle) = 
+            case model.page of
+                PageProgramming -> (pageProgramming model, progPageStyle)
+                PageAlgorithms  -> (pageAlgorithms  model, algoPageStyle)
+                PageMathematics -> (pageMathematics model, mathPageStyle)
+        in
+            div [w100, pageStyle, chosenStyle, flexGrow "1"] [page],
+
+        -- CONTACT
+        div [w100] [createContact model]
+    ]
 
 main : Program Never Model Msg
 main = Html.program {

@@ -12,10 +12,10 @@ newline : Html msg
 newline = br [] []
 
 pageProgramming : Model -> Html Msg
-pageProgramming model = text "Програмирање"
+pageProgramming model = div [] []
 
 pageAlgorithms : Model -> Html Msg
-pageAlgorithms model = text "Алгоритми"
+pageAlgorithms model = div [] []
 
 pageMathematics : Model -> Html Msg
-pageMathematics model = text "Математика"
+pageMathematics model = div [] []
