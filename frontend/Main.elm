@@ -2,32 +2,42 @@ import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (style, class, href, type_, rel)
 
-import Bootstrap.CDN as CDN
+import Window
 
-import Flex exposing (..)
+import Bootstrap.CDN as BootstrapCDN
+
+import Flex
 import Styles exposing (..)
 import Model exposing (..)
 import Pages exposing (..)
 
 initialState : (Model, Cmd msg)
-initialState = ({ page = PageProgramming }, Cmd.none)
+initialState = (initialModel, Cmd.none)
 
 -- UPDATE
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        newPage = case msg of
-            ProgrammingClicked -> PageProgramming
-            AlgorithmsClicked  -> PageAlgorithms
-            MathematicsClicked -> PageMathematics
-    in
-        ({ model | page = newPage }, Cmd.none)
+    (case msg of
+        WindowResized newSize -> 
+            { model | 
+              windowSize = newSize,
+              screenIsSmartphone = newSize.width <= Flex.phoneWidthThreshold,
+              screenIsPortrait = newSize.height >= newSize.width}
+        _ ->
+            let newPage = case msg of 
+                ProgrammingClicked -> PageProgramming
+                AlgorithmsClicked  -> PageAlgorithms
+                MathematicsClicked -> PageMathematics
+                _                  -> model.page
+            in
+                { model | page = newPage}
+    , Cmd.none)
 
 -- SUBS     
 
 subscriptions : Model -> Sub Msg
-subscriptions model = Sub.none
+subscriptions model = Window.resizes WindowResized
 
 -- Change header button background to blue if it is active
 bgActive : Model -> Page -> Attribute Msg
@@ -39,41 +49,47 @@ bgActive model page =
 -- VIEW
 createHeader : Model -> Html.Html Msg
 createHeader model =
-    horizontalContainer [w100, headerStyle, flexNoWrap] [
-        div [flexBasis "20%", nonSelectable, brandStyle] [text "Учиме и положуваме"],
-        div [flexBasis "5%"] [], -- separator
-        div [flexBasis "25%", nonSelectable, class "text-center", 
+    Flex.container Flex.Auto model.windowSize [Flex.w100, headerStyle] [
+        Flex.item [Flex.flexBasis 20, brandStyle] [text "Часови"],
+        Flex.item [Flex.flexBasis 5] [], -- separator
+        Flex.item [Flex.flexBasis 25, class "text-center", 
              bgActive model PageProgramming,
              programmingStyle, onClick ProgrammingClicked] 
             [text "Програмирање"],
-        div [flexBasis "25%", nonSelectable, class "text-center",
+        Flex.item [Flex.flexBasis 25, class "text-center",
              bgActive model PageAlgorithms,
              algorithmsStyle, onClick AlgorithmsClicked] 
             [text "Алгоритми"],
-        div [flexBasis "25%", nonSelectable, class "text-center",
+        Flex.item [Flex.flexBasis 25, class "text-center",
             bgActive model PageMathematics,
              mathStyle, onClick MathematicsClicked] 
             [text "Математика"]
     ]
 
 createContact : Model -> Html.Html Msg
-createContact _ = 
-    horizontalContainer [contactStyle, flexWrap, w100] [
-        div [class "text-left", flexBasis "50%"] 
-            [text "076 648 258"],
-        div [class "text-right", flexBasis "50%"] 
-            [text "aleksandar.jovanov.1995@gmail.com"]
-    ]
+createContact model = 
+    let
+        class1 = if model.screenIsSmartphone then "text-center" else "text-left"
+        class2 = if model.screenIsSmartphone then "text-center" else "text-right"
+        colwhite = style [("color", "white")]
+    in
+        Flex.container Flex.Auto model.windowSize [contactStyle, Flex.w100] [
+            Flex.item [class class1, Flex.flexBasis 50] 
+                [a [href "tel:076648258", colwhite] [text "076 648 258"]],
+            Flex.item [class class2, Flex.flexBasis 50] 
+                [a [href "mailto:aleksandar.jovanov.1995@gmail.com", colwhite] 
+                    [text "aleksandar.jovanov.1995@gmail.com"]]
+        ]
 
 view : Model -> Html.Html Msg
 view model =
-    verticalContainer [h100] [
+    Flex.container Flex.Column model.windowSize [Flex.h100] [
         -- STYLESHEETS
-        CDN.stylesheet,
+        BootstrapCDN.stylesheet,
         node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
 
         -- HEADER
-        div [w100] [createHeader model],
+        div [Flex.w100] [createHeader model],
 
         -- MAIN CONTENT
         let (page, chosenStyle) = 
@@ -82,10 +98,10 @@ view model =
                 PageAlgorithms  -> (pageAlgorithms  model, algoPageStyle)
                 PageMathematics -> (pageMathematics model, mathPageStyle)
         in
-            div [w100, pageStyle, chosenStyle, flexGrow "1"] [page],
+            div [Flex.w100, pageStyle, chosenStyle, Flex.flexGrow 1] [page],
 
         -- CONTACT
-        div [w100] [createContact model]
+        div [Flex.w100] [createContact model]
     ]
 
 main : Program Never Model Msg

@@ -5,12 +5,10 @@ import Html.Attributes exposing (style, class, id)
 
 type alias Style msg = Html.Attribute msg
 
-nonSelectable : Style msg
-nonSelectable = class "non-selectable"
-
 headerStyle : Style msg
 headerStyle = id "header"
 
+brandStyle : Style msg
 brandStyle = id "brand"
 
 footerStyle : Style msg
@@ -30,6 +28,12 @@ mathStyle = id "mathematics-button"
 
 pageStyle : Style msg
 pageStyle = class "page-style"
+
+cardStyle : Style msg
+cardStyle = class "item-card"
+
+cardLinkStyle : Style msg
+cardLinkStyle = class "item-card-link"
 
 progPageStyle : Style msg
 progPageStyle = id "programming-page-style"

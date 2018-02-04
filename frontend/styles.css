@@ -1,9 +1,7 @@
 html, body {
     background-color: white;
     height: 100%;
-}
 
-.non-selectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -23,13 +21,14 @@ html, body {
     text-align: center;
     vertical-align: middle;
     padding-top: 0.33em;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 18pt;
+    transition: 0.3s;
 }
 
 #contact {
-    /* background-color: rgb(96, 182, 38); */
-    background-color: rgb(226, 224, 224);
+    background-color: rgb(96, 182, 38);
+    /* background-color: rgb(226, 224, 224); */
     color: black;
     padding: 0.75em;
 }
@@ -61,14 +60,52 @@ html, body {
     padding: 1em;
 }
 
+.item-card {
+    padding: 0.75em;
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.20);
+    transition: 0.3s;
+}
+
+.item-card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.20);
+    background-color: rgb(96, 182, 38);
+    color: white;
+}
+
+.item-card-link {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.20);
+    transition: 0.3s;
+
+    padding: 0.75em;
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+}
+
+.item-card-link:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.20);
+}
+
+p {
+    text-align: justify;
+    font-size: 16pt;
+    text-indent: 1em;
+}
+
 #programming-page-style {
-    background: rgb(219, 181, 12);
+
 }
 
 #algorithms-page-style {
-    background: rgb(211, 214, 4);
+    /* background: rgb(211, 214, 4); */
 }
 
 #mathematics-page-style {
-    background: rgb(228, 224, 27);
+    /* background: rgb(228, 224, 27); */
 }
