@@ -4,6 +4,8 @@ import Html.Attributes exposing (style, class, href, type_, rel)
 
 import Window
 
+import Task
+
 import Bootstrap.CDN as BootstrapCDN
 
 import Flex
@@ -11,8 +13,19 @@ import Styles exposing (..)
 import Model exposing (..)
 import Pages exposing (..)
 
-initialState : (Model, Cmd msg)
-initialState = (initialModel, Cmd.none)
+initialSizeCmd : Cmd Msg
+initialSizeCmd = Task.perform WindowResized Window.size
+
+type alias Flags = {
+    userAgent: String
+}
+
+initialization : Flags -> (Model, Cmd Msg)
+initialization flags = (
+        {initialModel | userAgent = flags.userAgent, 
+                        isMobile  = userAgentCheckMobile flags.userAgent},
+        initialSizeCmd
+    )
 
 -- UPDATE
 
@@ -21,9 +34,7 @@ update msg model =
     (case msg of
         WindowResized newSize -> 
             { model | 
-              windowSize = newSize,
-              screenIsSmartphone = newSize.width <= Flex.phoneWidthThreshold,
-              screenIsPortrait = newSize.height >= newSize.width}
+              windowSize = newSize}
         _ ->
             let newPage = case msg of 
                 ProgrammingClicked -> PageProgramming
@@ -49,7 +60,7 @@ bgActive model page =
 -- VIEW
 createHeader : Model -> Html.Html Msg
 createHeader model =
-    Flex.container Flex.Auto model.windowSize [Flex.w100, headerStyle] [
+    Flex.container Flex.Auto model.isMobile [Flex.w100, headerStyle] [
         Flex.item [Flex.flexBasis 20, brandStyle] [text "Часови"],
         Flex.item [Flex.flexBasis 5] [], -- separator
         Flex.item [Flex.flexBasis 25, class "text-center", 
@@ -69,11 +80,11 @@ createHeader model =
 createContact : Model -> Html.Html Msg
 createContact model = 
     let
-        class1 = if model.screenIsSmartphone then "text-center" else "text-left"
-        class2 = if model.screenIsSmartphone then "text-center" else "text-right"
+        class1 = if model.isMobile then "text-center" else "text-left"
+        class2 = if model.isMobile then "text-center" else "text-right"
         colwhite = style [("color", "white")]
     in
-        Flex.container Flex.Auto model.windowSize [contactStyle, Flex.w100] [
+        Flex.container Flex.Auto model.isMobile [contactStyle, Flex.w100] [
             Flex.item [class class1, Flex.flexBasis 50] 
                 [a [href "tel:076648258", colwhite] [text "076 648 258"]],
             Flex.item [class class2, Flex.flexBasis 50] 
@@ -83,7 +94,7 @@ createContact model =
 
 view : Model -> Html.Html Msg
 view model =
-    Flex.container Flex.Column model.windowSize [Flex.h100] [
+    Flex.container Flex.Column model.isMobile [Flex.h100] [
         -- STYLESHEETS
         BootstrapCDN.stylesheet,
         node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
@@ -104,9 +115,9 @@ view model =
         div [Flex.w100] [createContact model]
     ]
 
-main : Program Never Model Msg
-main = Html.program {
-        init = initialState,
+main : Program Flags Model Msg
+main = Html.programWithFlags {
+        init = initialization,
         update = update,
         subscriptions = subscriptions,
         view = view

@@ -13,12 +13,11 @@ type alias GridSpecification = {
 (:>) : String -> String -> (String, String)
 (:>) a b = (a, b)
 
-phoneWidthThreshold : Int
-phoneWidthThreshold = 740
+type alias IsMobile = Bool
 
-autoSpecification : Window.Size -> GridSpecification
-autoSpecification {width, height} =
-    if width <= phoneWidthThreshold then
+autoSpecification : IsMobile -> GridSpecification
+autoSpecification isMobile =
+    if isMobile then
         { columns = "1fr", gap = "1em" }
     else
         { columns = "1fr 1fr", gap = "1em" }

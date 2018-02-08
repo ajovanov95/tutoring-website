@@ -5,10 +5,8 @@ module Flex exposing (FlexDirection(Row, Column, Auto),
                       flexGrow,
                       flexWrap,
                       flexNoWrap,
-                      w100, h100,
-                      phoneWidthThreshold)
+                      w100, h100)
 
-import Window
 import Html exposing (Html, Attribute, div)
 import Html.Attributes exposing (style)
 
@@ -18,18 +16,17 @@ import Html.Attributes exposing (style)
 -- Auto direction is row when possible, columns otherwise
 type FlexDirection = Row | Column | Auto
 
-phoneWidthThreshold : Int
-phoneWidthThreshold = 740
+type alias IsMobile = Bool
 
 container :  FlexDirection -> 
-             Window.Size -> 
+             IsMobile -> 
              List (Attribute msg) -> List (Html msg) -> Html msg
-container direction {width, height} attrs children = 
+container direction isMobile attrs children = 
     let 
         d = case direction of
                 Row -> "row"
                 Column -> "column"
-                Auto  -> if width <= phoneWidthThreshold then "column" else "row"
+                Auto  -> if isMobile then "column" else "row"
         s = style ["display" :> "flex", "flex-direction" :> d]
     in
         div (s :: attrs) children

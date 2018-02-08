@@ -36,7 +36,7 @@ cardLink content url tags =
 pageProgramming : Model -> Html Msg
 pageProgramming model = div [] 
     [Grid.container 
-        (Grid.autoSpecification model.windowSize) 
+        (Grid.autoSpecification model.isMobile) 
         [] 
         (List.map card 
           ["Структурно и објектно-ориентирано програмирање со C и Java",
@@ -52,7 +52,7 @@ pageProgramming model = div []
      -- USEFUL LINKS
      h2 [style [("margin", "0.5em")]] [text "Интегрирани развојни околини и едитори"],
      Grid.container 
-        (Grid.autoSpecification model.windowSize) 
+        (Grid.autoSpecification model.isMobile) 
         [] 
         (List.map (\(c, u, t) -> cardLink c u t) 
           [("Visual Studio Code", "https://code.visualstudio.com/", ["Едитор"]),
@@ -63,7 +63,7 @@ pageProgramming model = div []
           ]),
       h2 [style [("margin", "0.5em")]] [text "Околини за извршување и пакети за развој"],
       Grid.container 
-        (Grid.autoSpecification model.windowSize) 
+        (Grid.autoSpecification model.isMobile) 
         [] 
         (List.map (\(c, u, t) -> cardLink c u t) 
           [("Java Development Kit", "http://www.oracle.com/technetwork/java/javase/downloads/index.html", ["Java"]),
