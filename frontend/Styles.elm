@@ -8,6 +8,15 @@ type alias Style msg = Html.Attribute msg
 headerStyle : Style msg
 headerStyle = id "header"
 
+headerItemStyle : Style msg
+headerItemStyle = class "header-item"
+
+headerItemSelectedStyle : Style msg
+headerItemSelectedStyle = class "header-item-selected"
+
+headerSepStyle : Style msg
+headerSepStyle = class "header-separator"
+
 brandStyle : Style msg
 brandStyle = id "brand"
 

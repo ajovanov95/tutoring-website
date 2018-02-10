@@ -4,9 +4,28 @@ import Window
 
 import Regex
 
-type Page = PageProgramming | 
-            PageAlgorithms  |
-            PageMathematics
+type Page = 
+    PageProgramming | 
+    PageAlgorithms  |
+    PageMathematics |
+
+    PageHome    |
+    PageNews    |
+    PageAboutUs |
+    PageContact
+
+type HeaderMsg =
+    ProgrammingClicked |
+    AlgorithmsClicked  |
+    MathematicsClicked |
+
+    HomeClicked    |
+    NewsClicked    |
+    AboutUsClicked |
+    ContactClicked 
+
+type Msg = Header HeaderMsg |
+           WindowResized Window.Size
 
 type alias Model = {
     page: Page,
@@ -31,8 +50,3 @@ initialModel = {
 
 userAgentCheckMobile : String -> Bool
 userAgentCheckMobile ua = Regex.contains (Regex.regex "(M|m)obile") ua
-
-type Msg = ProgrammingClicked  |
-            AlgorithmsClicked  | 
-            MathematicsClicked |
-            WindowResized Window.Size

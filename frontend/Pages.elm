@@ -35,7 +35,9 @@ cardLink content url tags =
 
 pageProgramming : Model -> Html Msg
 pageProgramming model = div [] 
-    [Grid.container 
+    [   h2 [style [("margin", "0.2em")]] [text "Области кои ги обработуваме"],
+        hr [] [],
+        Grid.container 
         (Grid.autoSpecification model.isMobile) 
         [] 
         (List.map card 
@@ -47,10 +49,10 @@ pageProgramming model = div []
           "Linux и bash shell скрипти"]),
      -- INFORMATIONS
      newline,
-     p [] [text programmingText],
-     hr [] [],
+    --  p [] [text programmingText],
      -- USEFUL LINKS
      h2 [style [("margin", "0.5em")]] [text "Интегрирани развојни околини и едитори"],
+     hr [] [],
      Grid.container 
         (Grid.autoSpecification model.isMobile) 
         [] 
@@ -62,6 +64,7 @@ pageProgramming model = div []
            ("PyCharm", "https://www.jetbrains.com/pycharm/", ["Python"])
           ]),
       h2 [style [("margin", "0.5em")]] [text "Околини за извршување и пакети за развој"],
+      hr [] [],
       Grid.container 
         (Grid.autoSpecification model.isMobile) 
         [] 
@@ -74,6 +77,7 @@ pageProgramming model = div []
            ("Stack", "https://docs.haskellstack.org/en/stable/README/", ["Haskell"])
           ]),
       h2 [style [("margin", "0.5em")]] [text "Линукс дистрибуции"],
+      hr [] [],
       p [] [text "За почетници препорачана линукс дистрибуција е ", a [href "https://www.ubuntu.com/"] [text "Убунту"]]
     ]
 

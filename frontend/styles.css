@@ -1,5 +1,8 @@
 html, body {
-    background-color: white;
+    /* background-color: rgb(243, 240, 240); */
+
+    background: linear-gradient(180deg,lightgray,white);
+
     height: 100%;
 
     -webkit-touch-callout: none;
@@ -8,22 +11,56 @@ html, body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+    overflow-x: hidden;
+    /* overflow-y: hidden; */
 }
 
 #header {
-    background-color: #2f4f4f;
-    font-size: 16pt;
+    /* background-color: rgb(11, 32, 153); */
     color: white;
-    border-bottom: 5px #1351d8 solid;
+
+    background: linear-gradient(45deg, rgb(23, 23, 158), red);
+
+    font-size: 16pt;
+    
+    margin: 0.33em;
+    margin-bottom: 0.12em;
+
+    border-radius: 3px;
+}
+
+.header-item {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.5em;
+    font-weight: normal;
+    font-size: 15pt;
+    transition: 0.3s;
+    /* color: rgb(0, 0, 0); */
+}
+
+.header-item-selected {
+    /* color: darkgray; */
+    color: white;
+    text-decoration: underline;
+}
+
+.header-item-regular {
+    color: white;
+    text-decoration: unset;
+}
+
+.header-separator {
+    background: gray;
+    width: 1px;
+    margin: 0.5em;
 }
 
 #brand {
-    text-align: center;
-    vertical-align: middle;
-    padding-top: 0.33em;
-    font-weight: normal;
-    font-size: 18pt;
-    transition: 0.3s;
+    /* font-size: 18pt; */
+    /* color: black; */
+    font-style: italic;
 }
 
 #contact {
@@ -31,13 +68,11 @@ html, body {
     /* background-color: rgb(226, 224, 224); */
     color: black;
     padding: 0.75em;
-}
 
-#footer {
-    background-color: #1351d8;
-    font-size: 18pt;
-    color: white;
-    padding: 5pt;
+    margin: 0.33em;
+    margin-top: 0.12em;
+
+    border-radius: 3px;
 }
 
 #programming-button {
@@ -65,6 +100,7 @@ html, body {
     text-align: center;
     vertical-align: middle;
     color: black;
+    background-color: white;
 
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.20);
@@ -73,14 +109,16 @@ html, body {
 
 .item-card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.20);
-    background-color: rgb(96, 182, 38);
-    color: white;
+    /* background-color: rgb(96, 182, 38); */
+    /* color: white; */
 }
 
 .item-card-link {
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.20);
     transition: 0.3s;
+
+    background-color: white;
 
     padding: 0.75em;
     text-align: center;
