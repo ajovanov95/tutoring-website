@@ -1,6 +1,4 @@
-module Pages exposing (pageProgramming, 
-                       pageAlgorithms,
-                       pageMathematics)
+module Pages exposing (pageProgramming)
 
 import Model exposing (..)
 import Styles exposing (..)
@@ -13,24 +11,12 @@ import Grid
 newline : Html msg
 newline = br [] []
 
-programmingText : String
-programmingText = """
-    Сите часови се по договор со можност за организирање на курс ако има голема побарувачка.
-    Еден час трае по сат време. Доаѓаме кај вас дома или се наоѓаме на факултет.
-    Часови за средношколци се 150 денари, додека часови за на факултет се 250 денари.
-    Часови за луѓе кои се надвор од образовниот процес се 400 денари.
-    Блок од два часа има 20% попуст, додека блок од 3 часа има 30% попуст.
-    Ние можеме да ви инсталираме се што е неопходно но препорачуваме 
-    да не се губи време и сами да ги инсталирате неопходните програми од линковите подолу.
-    Детали за контакт има на крај на страната. Работно време, секој ден од 9ч - 18ч.
-"""
-
 card : String -> Html Msg
 card content = Grid.item [cardStyle] [text content]
 
 cardLink : String -> String -> List String -> Html Msg
 cardLink content url tags = 
-    Grid.item [cardLinkStyle] 
+    Grid.item [cardStyle] 
         [text <| "[" ++ String.join ", " tags ++ "] ", a [href url] [text content]]
 
 pageProgramming : Model -> Html Msg
@@ -80,9 +66,3 @@ pageProgramming model = div []
       hr [] [],
       p [] [text "За почетници препорачана линукс дистрибуција е ", a [href "https://www.ubuntu.com/"] [text "Убунту"]]
     ]
-
-pageAlgorithms : Model -> Html Msg
-pageAlgorithms model = div [] []
-
-pageMathematics : Model -> Html Msg
-pageMathematics model = div [] []

@@ -1,5 +1,4 @@
 import Html exposing (..)
-import Html.Events exposing (onClick)
 import Html.Attributes exposing (style, class, href, type_, rel)
 
 import Window
@@ -7,6 +6,7 @@ import Window
 import Task
 
 import Bootstrap.CDN as BootstrapCDN
+import Bootstrap.Navbar as Navbar
 
 import Flex
 import Styles exposing (..)
@@ -14,18 +14,22 @@ import Model exposing (..)
 import Pages exposing (..)
 import Header
 
-initialSizeCmd : Cmd Msg
-initialSizeCmd = Task.perform WindowResized Window.size
-
 type alias Flags = {
     userAgent: String
 }
 
+initialSizeCmd : Cmd Msg
+initialSizeCmd = Task.perform WindowResized Window.size
+
 initialization : Flags -> (Model, Cmd Msg)
-initialization flags = (
+initialization flags = 
+    let
+        (navbarState, navbarCmd) = Navbar.initialState NavbarMsg
+    in (
         {initialModel | userAgent = flags.userAgent, 
-                        isMobile  = userAgentCheckMobile flags.userAgent},
-        initialSizeCmd
+                        isMobile  = userAgentCheckMobile flags.userAgent,
+                        navbarState = navbarState},
+        Cmd.batch [initialSizeCmd, navbarCmd]
     )
 
 -- UPDATE
@@ -47,34 +51,39 @@ update msg model =
                         NewsClicked        -> updatePage PageNews
                         AboutUsClicked     -> updatePage PageAboutUs
                         ContactClicked     -> updatePage PageContact
+                NavbarMsg newState -> { model | navbarState = newState }
+        newCmd = Cmd.none
    in 
-       (newModel, Cmd.none)
+       (newModel, newCmd)
 
 -- SUBS     
 
 subscriptions : Model -> Sub Msg
-subscriptions model = Window.resizes WindowResized
+subscriptions model = 
+    Sub.batch 
+        [Window.resizes WindowResized,
+         Navbar.subscriptions model.navbarState NavbarMsg]
 
 view : Model -> Html.Html Msg
 view model =
     Flex.container Flex.Column model.isMobile [Flex.h100] [
         -- STYLESHEETS
         BootstrapCDN.stylesheet,
+        BootstrapCDN.fontAwesome,
         node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
 
         -- HEADER
-        div [Flex.w100] [Header.createHeader model],
+        div [Flex.w100] [
+            Header.createHeaderNavbar model
+        ],
 
         -- MAIN CONTENT
-        let (page, chosenStyle) = 
+        let page = 
             case model.page of
-                PageProgramming -> (pageProgramming model, progPageStyle)
-                PageAlgorithms  -> (pageAlgorithms  model, algoPageStyle)
-                PageMathematics -> (pageMathematics model, mathPageStyle)
-
-                _               -> (div [] [], class "")
+                PageProgramming -> pageProgramming model
+                _               -> div [] [text "Implement me"]
         in
-            div [Flex.w100, pageStyle, chosenStyle, Flex.flexGrow 1] [page]
+            div [Flex.w100, pageStyle, Flex.flexGrow 1] [page]
     ]
 
 main : Program Flags Model Msg
