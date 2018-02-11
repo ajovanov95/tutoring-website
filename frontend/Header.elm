@@ -6,22 +6,32 @@ import Html.Events exposing (..)
 
 import Model exposing (..)
 
+import Color
+
 import Bootstrap.Navbar as Navbar
 
 createHeaderNavbar : Model -> Html Msg
 createHeaderNavbar model = 
-    Navbar.config NavbarMsg
-    |> Navbar.withAnimation
-    |> Navbar.collapseMedium            -- Collapse menu at the medium breakpoint
-    |> Navbar.brand [ href "#"] [ text "Часови"]
-    |> Navbar.success
-    |> Navbar.items
-        [ Navbar.itemLink [href "#home", onClick (Header HomeClicked)] [ text "Дома"]
-        , Navbar.itemLink [href "#programming", onClick (Header ProgrammingClicked)] [ text "Програмирање"]
-        , Navbar.itemLink [href "#algorithms", onClick (Header AlgorithmsClicked)] [ text "Алгоритми"]
-        , Navbar.itemLink [href "#mathematics", onClick (Header MathematicsClicked)] [ text "Математика"]
-        , Navbar.itemLink [href "#news", onClick (Header NewsClicked)] [ text "Вести"]
-        , Navbar.itemLink [href "#aboutus", onClick (Header AboutUsClicked)] [ text "За нас"]
-        , Navbar.itemLink [href "#contact", onClick (Header ContactClicked)] [ text "Контакт"]
-        ]
-    |> Navbar.view model.navbarState
+    let
+        mkItem hash content msg =
+            Navbar.itemLink [
+                href <| "#" ++ hash, 
+                attribute "data-toggle" "collapse", 
+                attribute "data-target" ".navbar-collapse", 
+                onClick (Header msg)] [ text content ]
+    in
+        Navbar.config NavbarMsg
+        |> Navbar.withAnimation
+        |> Navbar.collapseSmall
+        |> Navbar.brand [ href "#"] [ text "Часови"]
+        |> Navbar.lightCustom Color.green
+        |> Navbar.items
+            [ mkItem "home" "Дома" HomeClicked
+            , mkItem "programming" "Програмирање" ProgrammingClicked
+            , mkItem "algorithms" "Алгоритми" AlgorithmsClicked  
+            , mkItem "mathematics" "Математика" MathematicsClicked
+            , mkItem "news" "Вести" NewsClicked 
+            -- , mkItem "abous" "За нас" AboutUsClicked
+            , mkItem "contact" "Контакт" ContactClicked
+            ]
+        |> Navbar.view model.navbarState

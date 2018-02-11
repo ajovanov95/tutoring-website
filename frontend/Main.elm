@@ -14,6 +14,8 @@ import Model exposing (..)
 import Pages exposing (..)
 import Header
 
+-- INIT
+
 type alias Flags = {
     userAgent: String
 }
@@ -69,7 +71,7 @@ view model =
     Flex.container Flex.Column model.isMobile [Flex.h100] [
         -- STYLESHEETS
         BootstrapCDN.stylesheet,
-        BootstrapCDN.fontAwesome,
+        -- BootstrapCDN.fontAwesome,
         node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
 
         -- HEADER
@@ -78,12 +80,7 @@ view model =
         ],
 
         -- MAIN CONTENT
-        let page = 
-            case model.page of
-                PageProgramming -> pageProgramming model
-                _               -> div [] [text "Implement me"]
-        in
-            div [Flex.w100, pageStyle, Flex.flexGrow 1] [page]
+        div [Flex.w100, pageStyle, Flex.flexGrow 1] [createPage model]
     ]
 
 main : Program Flags Model Msg
