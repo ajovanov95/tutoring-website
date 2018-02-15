@@ -71,7 +71,7 @@ view model =
     Flex.container Flex.Column model.isMobile [Flex.h100] [
         -- STYLESHEETS
         BootstrapCDN.stylesheet,
-        -- BootstrapCDN.fontAwesome,
+        BootstrapCDN.fontAwesome,
         node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
 
         -- HEADER
