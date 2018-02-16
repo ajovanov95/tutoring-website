@@ -35,6 +35,19 @@ html, body {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.20);
 }
 
+.picture-frame {
+    width: 96px;
+    height: 128px;
+    border-radius: 16px;
+}
+
+.aboutme-text {
+    margin-left: 10px;
+    margin-top: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 p {
     text-align: justify;
     font-size: 16pt;

@@ -9,6 +9,7 @@ import Pages.Contact as Contact
 
 import Pages.Programming as Programming
 
+import Pages.News as News
 
 createPage : Model -> Html Msg
 createPage model =
@@ -19,6 +20,8 @@ createPage model =
                 PageProgramming -> Programming.programmingPage model
                 
                 PageContact     -> Contact.contactPage model
+
+                PageNews        -> News.newsPage model 
 
                 _               -> div [] [text "Implement me"]
     in

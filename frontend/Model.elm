@@ -6,6 +6,8 @@ import Window
 
 import Regex
 
+import Date
+
 type Page = 
     PageProgramming | 
     PageAlgorithms  |
@@ -30,9 +32,17 @@ type Msg = Header HeaderMsg |
            NavbarMsg Navbar.State |
            WindowResized Window.Size
 
+type alias News = {
+    title: String,
+    content: String,
+    dateCreated: Date.Date
+}
+
 type alias Model = {
     page: Page,
     
+    newsList: List News,
+
     userAgent: String,
 
     windowSize: Window.Size,
@@ -48,6 +58,14 @@ initialModel =
         fst (a, _) = a
     in {
         page = PageHome,
+
+        -- newsList = [],
+
+        newsList = [{title = "Hello", content="This be news", 
+                    dateCreated = Date.fromTime 1234567891234},
+                    {title = "Message", content="Something very important",
+                    dateCreated = Date.fromTime 1254567861234}
+                ],
 
         userAgent = "",
 

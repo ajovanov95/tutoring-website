@@ -43,7 +43,7 @@ createHeaderNavbar model =
             [ mkItem "home" "Дома" HomeClicked PageHome (Just "fas fa-home")
             , mkItem "programming" "Програмирање" ProgrammingClicked PageProgramming Nothing
             -- , mkItem "algorithms" "Алгоритми" AlgorithmsClicked  
-            , mkItem "mathematics" "Математика" MathematicsClicked PageMathematics Nothing
+            -- , mkItem "mathematics" "Математика" MathematicsClicked PageMathematics Nothing
             , mkItem "news" "Вести" NewsClicked PageNews (Just "fas fa-newspaper")
             -- , mkItem "abous" "За нас" AboutUsClicked
             , mkItem "contact" "Контакт" ContactClicked PageContact (Just "fas fa-phone")

@@ -23,15 +23,19 @@ contactPage model =
             Textarea.textarea [Textarea.id "myarea", Textarea.rows 7] ,
 
             br [] [],
-            Button.button [Button.success, Button.block] [text "Испрати порака"]
+            Button.button [Button.outlinePrimary, Button.block] [text "Испрати порака"]
         ],
         hr [] [],
         h3 [] [text "Побарајте не на мобилен телефон"],
-        text "Можете да не добиете на 076 648 258. Бројот е активен и на viber.",
+        div [] [
+            text "Можете да не добиете на 076 648 258. Бројот е активен и на ",
+            span [class "fab fa-viber", style [("color", "#59267c")]] []
+        ],
         hr [] [],
         h3 [] [text "Наше присуство на социјални мрежи."],
-        text "Тука оди присуство.",
+        -- text "Тука оди присуство.",
+        a [href "https://www.linkedin.com/in/acepwns/"] [span [class "fab fa-linkedin"] []],
         hr [] [],
         h3 [] [text "Работно време"],
-        text "Тука оди работно време"
+        text "Секој работен ден од 8-18ч. Сабота од 10-16ч. Недела не работиме."
     ]
