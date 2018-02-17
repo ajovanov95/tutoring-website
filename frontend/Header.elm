@@ -39,7 +39,7 @@ createHeaderNavbar model =
         |> Navbar.darkCustom Color.blue
         |> Navbar.items
             [ mkItem "Дома" HomeClicked PageHome (Just "fas fa-home")
-            , mkItem "Програмирање" ProgrammingClicked PageProgramming Nothing
+            , mkItem "Програмирање" ProgrammingClicked PageProgramming (Just "fas fa-tasks")
             , mkItem "Вести" NewsClicked PageNews (Just "fas fa-newspaper")
             , mkItem "Контакт" ContactClicked PageContact (Just "fas fa-phone")
             ]

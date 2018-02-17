@@ -41,7 +41,7 @@ contactPage model =
         h3 [] [text "Работно време"],
         Flex.container Flex.Column model.isMobile [] [
             Flex.item [] [text "Секој работен ден од 8 - 18ч."],
-            Flex.item [] [text "Сабота од 10-16ч."],
+            Flex.item [] [text "Сабота од 10 - 16ч."],
             Flex.item [] [text "Недела не работиме."]
         ]
         -- text "Секој работен ден од 8-18ч. Сабота од 10-16ч. Недела не работиме."
