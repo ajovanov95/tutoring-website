@@ -25,12 +25,9 @@ pricelistTable =
                 Table.th [] [text "Цена"]
             ], 
             tbody = Table.tbody [] [
-                mkRow "1 час од 45 минути по програмирање" "250 денари",
-                mkRow "2 часa од 45 минути по програмирање" "450 денари",
-                mkRow "3 часa од 45 минути по програмирање" "600 денари",
-                mkRow "1 час од 45 минути по математика" "150 денари",
-                mkRow "2 часa од 45 минути по математика" "250 денари",
-                mkRow "3 часa од 45 минути по математика" "400 денари",
+                mkRow "1 час од 45 минути по програмирање" "100 денари",
+                mkRow "2 часa од 45 минути по програмирање" "180 денари",
+                mkRow "3 часa од 45 минути по програмирање" "250 денари",
                 mkRow "4 и повеќе часа" "По договор",
                 mkRow "Проектни задачи" "По договор"
             ]
@@ -56,17 +53,23 @@ aboutUsCard model =
     [cardStyle, style [("align-items", "center")]] 
     [
         img [src "images/aleksandar.jpg", class "picture-frame"] [],
-        p [class "aboutme-text"] [text "Дипломиран инженер по информатика."]
+        p [class "aboutme-text"] [text "Александар Јованов - Дипломиран инженер по информатика."]
     ]
 
 homePage : Model -> Html Msg
 homePage model =
     Flex.container Flex.Column model.isMobile 
         [] 
-        [h1 [class "text-center display-4"] [text "Добредојдовте во светот на знаењето."],
+        [h3 [class (if model.isMobile then "text-center" else "text-left")] 
+            [text "Добредојдовте во светот на знаењето."],
          welcomeMessage,
-         h4 [class "text-left"] [text "За нас"],
-         aboutUsCard model
-        --  h4 [class "text-left"] [text "Ценовник"],
-        --  pricelistTable
+         h4 [class (if model.isMobile then "text-center" else "text-left")] 
+            [text "За нас"],
+         aboutUsCard model,
+         h4 [class (if model.isMobile then "text-center" else "text-left"),
+            style [("margin-top", if model.isMobile then "20px" else "5px")]] 
+            [text "Нашите ниски цени"],
+         pricelistTable,
+         p [] [text "Во група важи 5% попуст по секој член за секој член (на пример тројца е 15% попуст)."],
+         p [] [text "Не работиме со картички туку само во готово."]
         ]

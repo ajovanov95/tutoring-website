@@ -10,6 +10,8 @@ import Bootstrap.Button as Button
 
 import Model exposing (..)
 
+import Flex
+
 contactPage : Model -> Html Msg
 contactPage model =
     Form.form [] 
@@ -37,5 +39,10 @@ contactPage model =
         a [href "https://www.linkedin.com/in/acepwns/"] [span [class "fab fa-linkedin"] []],
         hr [] [],
         h3 [] [text "Работно време"],
-        text "Секој работен ден од 8-18ч. Сабота од 10-16ч. Недела не работиме."
+        Flex.container Flex.Column model.isMobile [] [
+            Flex.item [] [text "Секој работен ден од 8 - 18ч."],
+            Flex.item [] [text "Сабота од 10-16ч."],
+            Flex.item [] [text "Недела не работиме."]
+        ]
+        -- text "Секој работен ден од 8-18ч. Сабота од 10-16ч. Недела не работиме."
     ]

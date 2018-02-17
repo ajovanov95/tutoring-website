@@ -2,28 +2,18 @@ module Pages exposing (createPage)
 
 import Model exposing (..)
 
-import Html exposing (Html, div, text)
+import Html exposing (Html)
 
 import Pages.Home as Home
-import Pages.Contact as Contact
-
 import Pages.Programming as Programming
-
 import Pages.News as News
+import Pages.Contact as Contact
 
 createPage : Model -> Html Msg
 createPage model =
-    let pageHtml = 
-            case model.page of
-                PageHome        -> Home.homePage model
-
-                PageProgramming -> Programming.programmingPage model
-                
-                PageContact     -> Contact.contactPage model
-
-                PageNews        -> News.newsPage model 
-
-                _               -> div [] [text "Implement me"]
-    in
-        pageHtml
+    case model.page of
+        PageHome        -> Home.homePage model
+        PageProgramming -> Programming.programmingPage model
+        PageContact     -> Contact.contactPage model
+        PageNews        -> News.newsPage model 
 

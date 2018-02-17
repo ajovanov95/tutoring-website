@@ -1,0 +1,9 @@
+1. Develop a backend in haskell + servant for REST 
+    It should have the following API endpoints.
+    1.1 /      -> serve index.html
+    1.2 /debug -> compile Main.elm and serve index.html
+    1.3 /news?limit=L&group=G -> get L last news and serve as json response, group if group=True
+    1.4 /send-mail?to=addr&content=C -> send an email
+2. Develop Elm fronted code to invoke backend api, parse json and fill model.
+3. Extend the backend to use + persist + sqlite 
+4. Deploy to a Docker image and host on heroku or openshift.

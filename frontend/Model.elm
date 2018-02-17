@@ -10,22 +10,14 @@ import Date
 
 type Page = 
     PageProgramming | 
-    PageAlgorithms  |
-    PageMathematics |
-
     PageHome    |
     PageNews    |
-    PageAboutUs |
     PageContact
 
 type HeaderMsg =
     ProgrammingClicked |
-    AlgorithmsClicked  |
-    MathematicsClicked |
-
     HomeClicked    |
     NewsClicked    |
-    AboutUsClicked |
     ContactClicked 
 
 type Msg = Header HeaderMsg |
@@ -77,4 +69,5 @@ initialModel =
     }
 
 userAgentCheckMobile : String -> Bool
-userAgentCheckMobile ua = Regex.contains (Regex.regex "(M|m)obile") ua
+userAgentCheckMobile ua = 
+    Regex.contains (Regex.regex "(M|m)obile") ua

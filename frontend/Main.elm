@@ -1,5 +1,4 @@
 import Html exposing (..)
-import Html.Attributes exposing (style, class, href, type_, rel)
 
 import Window
 
@@ -45,13 +44,9 @@ update msg model =
                 WindowResized newSize -> { model | windowSize = newSize}
                 Header hdrMsg ->
                     case hdrMsg of
-                        ProgrammingClicked -> updatePage PageProgramming
-                        AlgorithmsClicked  -> updatePage PageAlgorithms
-                        MathematicsClicked -> updatePage PageMathematics
-
                         HomeClicked        -> updatePage PageHome
+                        ProgrammingClicked -> updatePage PageProgramming
                         NewsClicked        -> updatePage PageNews
-                        AboutUsClicked     -> updatePage PageAboutUs
                         ContactClicked     -> updatePage PageContact
                 NavbarMsg newState -> { model | navbarState = newState }
         newCmd = Cmd.none
@@ -69,10 +64,7 @@ subscriptions model =
 view : Model -> Html.Html Msg
 view model =
     Flex.container Flex.Column model.isMobile [Flex.h100] [
-        -- STYLESHEETS
         BootstrapCDN.stylesheet,
-        BootstrapCDN.fontAwesome,
-        node "link" [href "styles.css", type_ "text/css", rel "stylesheet"] [],
 
         -- HEADER
         div [Flex.w100] [

@@ -17,12 +17,12 @@ newsCard {title, content, dateCreated} =
         month = toString <| Date.month dateCreated
         day  = toString <| Date.day dateCreated
 
-        niceDate = year ++ "/" ++ month ++ "/" ++ day
+        niceDate = day ++ " / " ++ month ++ " / " ++ year
     in
         Card.config [] |>
         Card.block [] [
             Card.titleH3 [class "text-center"] [text title],
-            Card.text [] [text content],
+            Card.text [] [p [] [text content]],
             Card.text [] [text niceDate]
         ] |>
         Card.view
@@ -30,8 +30,8 @@ newsCard {title, content, dateCreated} =
 newsPage : Model -> Html Msg 
 newsPage model = 
     let
-        sorted = List.sortBy (toString << .dateCreated) model.newsList
+        sorted = List.sortBy (Date.toTime << .dateCreated) model.newsList
     in
         Grid.container (Grid.autoSpecification model.isMobile) 
-        []
-        <| List.map newsCard sorted
+        [] -- ATTRS
+        (List.map newsCard sorted)
