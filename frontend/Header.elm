@@ -17,7 +17,7 @@ createHeaderNavbar model =
             let
                 htm = case icon of 
                     Just iconClass -> 
-                        [span [class iconClass, 
+                        [span [class <| iconClass ++ " icon-wobble", 
                                style [("margin-right", "10px")]
                                ] [], text content]
                     Nothing   -> [text content] 
@@ -25,7 +25,8 @@ createHeaderNavbar model =
                 Navbar.itemLink [
                     style [("border-bottom", 
                       if model.page == page && 
-                         not model.isMobile then "3px white solid" else "none")],
+                         not model.isMobile then "2px orange solid" else "none"),
+                         ("color", "white")],
                     attribute "data-toggle" "collapse", 
                     attribute "data-target" ".navbar-collapse", 
                     onClick (Header msg)] htm
@@ -34,7 +35,7 @@ createHeaderNavbar model =
         |> Navbar.withAnimation
         |> Navbar.collapseSmall
         |> Navbar.brand [ href "#", onClick (Header HomeClicked)] 
-          [div [] [span [class "fas fa-book", 
+          [div [] [span [class "fas fa-book icon-wobble", 
                          style [("margin-right", "10px")]] [], text "Часови"]]
         |> Navbar.darkCustom Color.blue
         |> Navbar.items

@@ -1,3 +1,10 @@
+@keyframes mini-wobble {
+    0% { transform: rotate(0deg)}
+    25% {transform: rotate(-15deg)}
+    75% {transform: rotate(15deg)}
+    100% {transform: rotate(0deg)}
+}
+
 html, body {
     height: 100%;
 
@@ -15,8 +22,6 @@ html, body {
 .page-style {
     font-size: 12pt;
     padding: 1em;
-
-    /* background: linear-gradient(180deg, white, gray); */
 }
 
 .item-card {
@@ -39,6 +44,16 @@ html, body {
     width: 96px;
     height: 128px;
     border-radius: 16px;
+
+    transition: transform 2s;
+}
+
+.picture-frame:hover {
+    transform: scale(1.15, 1.15);
+}    
+
+.icon-wobble:hover {
+    animation: mini-wobble 1s;
 }
 
 .aboutme-text {

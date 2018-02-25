@@ -6,26 +6,24 @@ import Model exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Bootstrap.Card as Card
 
 import Date
 
 newsCard : News -> Html Msg
 newsCard {title, content, dateCreated} =
     let
-        year = toString <| Date.year dateCreated
+        year  = toString <| Date.year dateCreated
         month = toString <| Date.month dateCreated
-        day  = toString <| Date.day dateCreated
+        day   = toString <| Date.day dateCreated
 
         niceDate = day ++ " / " ++ month ++ " / " ++ year
     in
-        Card.config [] |>
-        Card.block [] [
-            Card.titleH3 [class "text-center"] [text title],
-            Card.text [] [p [] [text content]],
-            Card.text [] [text niceDate]
-        ] |>
-        Card.view
+        div [class "item-card"] 
+        [
+            h4 [class "text-center"] [text title],
+            p  [class "text-center"] [text content],
+            h6 [class "text-center"] [text niceDate]
+        ]
 
 newsPage : Model -> Html Msg 
 newsPage model = 
