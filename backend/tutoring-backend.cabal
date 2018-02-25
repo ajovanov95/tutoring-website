@@ -1,0 +1,26 @@
+name:           tutoring-backend
+version:        0.0.0.1
+description:    Haskell backend for my tutoring website
+homepage:       https://github.com/ajovanov95/tutoring.git
+author:         Aleksandar Jovanov
+maintainer:     aleksandar.jovanov.1995@gmail.com
+copyright:      2018 Aleksandar Jovanov
+build-type:     Simple
+cabal-version:  >= 1.10
+
+source-repository head
+  type: git
+  location: https://github.com/ajovanov95/tutoring.git
+
+executable tutoring-backend-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options:
+     -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5,
+      servant,
+      wai,
+      warp
+  default-language: Haskell2010
