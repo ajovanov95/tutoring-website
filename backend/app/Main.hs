@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
@@ -37,18 +38,15 @@ type NewsApi = "news" :> QueryParam "limit" Int :> Get '[JSON] [News]
 
 type SendEmailApi = "email" :> ReqBody '[JSON] Email :> Post '[JSON] (Maybe String)
 
-newsApi :: Proxy NewsApi
-newsApi = Proxy
-
-sendEmailApi :: Proxy SendEmailApi
-sendEmailApi = Proxy
+-- Dummy return type
+type RedirectApi = Get '[JSON] Int
 
 dummyNews = [
     News "Test 1" "This is some message" "23.2.2018",
     News "Test 2" "This is another message" "24.2.2018",
     News "Test 3" "This is a third message" "25.2.2018"]
 
-type WholeApi = NewsApi :<|> SendEmailApi :<|> Raw
+type WholeApi = NewsApi :<|> SendEmailApi :<|> RedirectApi :<|> Raw
 
 wholeApi :: Proxy WholeApi
 wholeApi = Proxy
@@ -62,9 +60,13 @@ handlerEmail :: Email -> Handler (Maybe String)
 handlerEmail Email{..} = do 
     return $ Nothing
 
+redirectHome :: Handler Int
+redirectHome = throwError $ err301 { errHeaders = [("Location", "/index.html")] }
+
 server :: Server WholeApi
 server = handlerNews  :<|> 
          handlerEmail :<|> 
+         redirectHome :<|>
          (serveDirectoryWebApp ".") -- this will serve the static files
 
 app :: Application 
