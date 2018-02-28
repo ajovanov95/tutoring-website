@@ -21,6 +21,9 @@ executable tutoring-backend-exe
   build-depends:
       base >=4.7 && <5,
       servant,
+      servant-server,
       wai,
-      warp
+      warp,
+      mtl,
+      aeson
   default-language: Haskell2010

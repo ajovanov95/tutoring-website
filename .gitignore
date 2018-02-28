@@ -2,3 +2,4 @@ frontend/elm-stuff/*
 frontend/main.html
 frontend/main.js
 backend/.stack-work
+release/

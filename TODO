@@ -6,4 +6,5 @@
     1.4 /send-mail?to=addr&content=C -> send an email
 2. Develop Elm fronted code to invoke backend api, parse json and fill model.
 3. Extend the backend to use + persist + sqlite 
-4. Deploy to a Docker image and host on heroku or openshift.
+4. Extend to backend to log all messages of interest.
+5. Deploy to a Docker image and host on heroku or openshift.

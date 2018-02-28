@@ -1,4 +1,74 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE RecordWildCards #-}
+
 module Main where
 
+import Network.Wai
+import Network.Wai.Handler.Warp(run)
+
+import Servant
+import Data.Aeson
+import GHC.Generics
+
+-- Here be liftIO
+-- Handler = ExceptT (ServantErr IO)
+import Control.Monad.Except
+
+data News = News {
+    title :: String,
+    content :: String,
+    dateCreated :: String
+} deriving (Eq, Show, Generic)
+
+instance ToJSON News
+instance FromJSON News
+
+data Email = Email {
+    receiverAddress :: String,
+    messageContent :: String
+} deriving (Eq, Show, Generic)
+
+instance ToJSON Email
+instance FromJSON Email
+
+type NewsApi = "news" :> QueryParam "limit" Int :> Get '[JSON] [News]
+
+type SendEmailApi = "email" :> ReqBody '[JSON] Email :> Post '[JSON] (Maybe String)
+
+newsApi :: Proxy NewsApi
+newsApi = Proxy
+
+sendEmailApi :: Proxy SendEmailApi
+sendEmailApi = Proxy
+
+dummyNews = [
+    News "Test 1" "This is some message" "23.2.2018",
+    News "Test 2" "This is another message" "24.2.2018",
+    News "Test 3" "This is a third message" "25.2.2018"]
+
+type WholeApi = NewsApi :<|> SendEmailApi :<|> Raw
+
+wholeApi :: Proxy WholeApi
+wholeApi = Proxy
+
+handlerNews :: Maybe Int -> Handler [News]
+handlerNews Nothing  = return dummyNews
+handlerNews (Just l) = return $ take l dummyNews
+
+-- Nothing means no error
+handlerEmail :: Email -> Handler (Maybe String)
+handlerEmail Email{..} = do 
+    return $ Nothing
+
+server :: Server WholeApi
+server = handlerNews  :<|> 
+         handlerEmail :<|> 
+         (serveDirectoryWebApp ".") -- this will serve the static files
+
+app :: Application 
+app = wholeApi `serve` server
+
 main :: IO ()
-main = print "Hi. I am a baby backend. When I grow up I will be a full fledged server application."
+main = run 8000 app
