@@ -37,7 +37,7 @@ createHeaderNavbar model =
         |> Navbar.brand [ href "#", onClick (Header HomeClicked)] 
           [div [] [span [class "fas fa-book icon-wobble", 
                          style [("margin-right", "10px")]] [], text "Часови"]]
-        |> Navbar.darkCustom Color.blue
+        |> (Navbar.darkCustom Color.black)
         |> Navbar.items
             [ mkItem "Дома" HomeClicked PageHome (Just "fas fa-home")
             , mkItem "Програмирање" ProgrammingClicked PageProgramming (Just "fas fa-tasks")

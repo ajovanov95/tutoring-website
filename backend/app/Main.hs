@@ -34,9 +34,8 @@ data Email = Email {
 instance ToJSON Email
 instance FromJSON Email
 
-type NewsApi = "news" :> QueryParam "limit" Int :> Get '[JSON] [News]
-
-type SendEmailApi = "email" :> ReqBody '[JSON] Email :> Post '[JSON] (Maybe String)
+type NewsApi      = "news"      :> QueryParam "limit" Int :> Get '[JSON] [News]
+type SendEmailApi = "send-mail" :> ReqBody '[JSON] Email  :> Post '[JSON] (Maybe String)
 
 -- Dummy return type
 type RedirectApi = Get '[JSON] Int

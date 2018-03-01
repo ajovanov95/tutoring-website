@@ -10,3 +10,11 @@ pageStyle = class "page-style"
 
 cardStyle : Style msg
 cardStyle = class "item-card"
+
+(:>) : String -> String -> (String, String)
+(:>) a b = (a, b)
+
+style_ x = [x] |> style
+
+-- Example
+-- "width" :> "50px" :: "height" :> "60px" :: []
