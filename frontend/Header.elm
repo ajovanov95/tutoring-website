@@ -6,42 +6,58 @@ import Html.Events exposing (..)
 
 import Model exposing (..)
 
-import Color
+import Styles exposing (..)
 
-import Bootstrap.Navbar as Navbar
+makeIcon : String -> Bool -> Html Msg
+makeIcon name isActive = 
+    let
+        styleActive  = ["color" :> "black"] |> style
+    in
+    span 
+    ([class <| "fas " ++ name ++ " icon-wobble",
+     "margin-right" :> "10px" |> style_] 
+      ++ if isActive then [styleActive] else []) []
+
+makeNavbarItem : String -> String -> Bool -> HeaderMsg -> Page -> Html Msg
+makeNavbarItem content iconName isActive msg page =
+    a [class "navbar-item", onClick <| Header msg] 
+    [
+        makeIcon iconName isActive,
+        text content
+    ]
 
 createHeaderNavbar : Model -> Html Msg
-createHeaderNavbar model = 
-    let
-        mkItem content msg page icon =
-            let
-                htm = case icon of 
-                    Just iconClass -> 
-                        [span [class <| iconClass ++ " icon-wobble", 
-                               style [("margin-right", "10px")]
-                               ] [], text content]
-                    Nothing   -> [text content] 
-            in
-                Navbar.itemLink [
-                    style [("border-bottom", 
-                      if model.page == page && 
-                         not model.isMobile then "2px orange solid" else "none"),
-                         ("color", "white")],
-                    attribute "data-toggle" "collapse", 
-                    attribute "data-target" ".navbar-collapse", 
-                    onClick (Header msg)] htm
-    in
-        Navbar.config NavbarMsg
-        |> Navbar.withAnimation
-        |> Navbar.collapseSmall
-        |> Navbar.brand [ href "#", onClick (Header HomeClicked)] 
-          [div [] [span [class "fas fa-book icon-wobble", 
-                         style [("margin-right", "10px")]] [], text "Часови"]]
-        |> (Navbar.darkCustom Color.black)
-        |> Navbar.items
-            [ mkItem "Дома" HomeClicked PageHome (Just "fas fa-home")
-            , mkItem "Програмирање" ProgrammingClicked PageProgramming (Just "fas fa-tasks")
-            , mkItem "Вести" NewsClicked PageNews (Just "fas fa-newspaper")
-            , mkItem "Контакт" ContactClicked PageContact (Just "fas fa-phone")
+createHeaderNavbar model =
+    nav [class "navbar is-transparent is-warning"] 
+    [
+        -- BRAND and BURGER
+        div [class "navbar-brand is-warning", "padding" :> "1.5em" |> style_] 
+        [
+            p [class "is-large"] [text "Часови"],
+
+            div [class "navbar-burger burger", attribute "data-target" "navMenu"] 
+            [
+                -- empty spans actually are neccessary for stuff to work :/
+                span [] [],
+                span [] [],
+                span [] []
             ]
-        |> Navbar.view model.navbarState
+        ],
+        
+        -- MENU
+        div [class "navbar-menu", id "navMenu"] 
+        [
+            -- LEFT SIDE ITEMS
+            div [class "navbar-start"] 
+            [
+                makeNavbarItem "Дома" "fa-home" 
+                                (model.page == PageHome) HomeClicked PageHome,
+                makeNavbarItem "Програмирање" "fa-tasks"
+                                (model.page == PageProgramming) ProgrammingClicked PageProgramming,
+                makeNavbarItem "Вести" "fa-newspaper" 
+                                (model.page == PageNews) NewsClicked PageNews,
+                makeNavbarItem "Контакт" "fa-phone" 
+                                (model.page == PageContact) ContactClicked PageContact
+            ]
+        ]
+    ]

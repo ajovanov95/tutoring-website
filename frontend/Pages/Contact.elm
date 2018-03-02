@@ -3,11 +3,6 @@ module Pages.Contact exposing (contactPage)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-import Bootstrap.Form as Form
-import Bootstrap.Form.Input as Input
-import Bootstrap.Form.Textarea as Textarea
-import Bootstrap.Button as Button
-
 import Model exposing (..)
 import Styles exposing (..)
 
@@ -15,21 +10,29 @@ import Flex
 
 emailForm : Bool -> Html Msg
 emailForm isMobile = 
-    Form.form [Flex.flexBasis 50, class "item-card"] [ 
-        h3 [] [text "Пишете ни електронска порака"],
-        Form.group [] 
+    div [Flex.flexBasis 50, class "item-card"]
         [
-            Form.label [for "myemail"] [text "Вашата адреса на електронска пошта"],
-            Input.email [Input.id "myemail"],
+            h3 [class "is-size-3"] [text "Пишете ни порака"],
 
-            Form.label [for "myarea"] [text "Вашата порака"],
-            Textarea.textarea [Textarea.id "myarea", Textarea.rows 12] ,
+            div [class "field"]
+            [
+                label [for "myemail", class "label"] [text "Вашата адреса на електронска пошта"],
 
-            br [] [],
-            Button.button ([Button.outlinePrimary, Button.block]) [text "Испрати порака"]
+                input [class "input is-primary", type_ "email", id "myemail"] []
+            ],
+
+            div [class "field"]
+            [
+                label [for "myarea", class "label"] [text "Вашата порака"],
+                textarea [class "textarea is-primary", rows 8, id "myemail"] []
+            ],
+
+            button [class "button is-primary"] [text "Испрати порака"]
         ]
-    ]
-    
+
+iconStyle : Attribute Msg
+iconStyle = style ["margin-left" :> "16px"]
+
 infoBoxes : Model -> Html Msg
 infoBoxes model = 
     let
@@ -39,13 +42,14 @@ infoBoxes model =
         [
             Flex.flexBasis 50, 
             [
-                "padding-left" :> "2em",
-                "justify-content" :> if model.isMobile then "center" else "start"
+                if not model.isMobile then "padding-left" :> "1em" 
+                else "padding-top" :> "1.5em",
+                "justify-content" :>  "space-between" 
             ] |> style
         ]
         [
             Flex.item [class "item-card"] [
-                h3 [] [text "Побарајте не на мобилен телефон"],
+                h3 [class "is-size-3"] [text "Побарајте не на мобилен телефон"],
                 text "Можете да не добиете на 076 648 258.",
                 br [] [],
                 text "Бројот е активен и на ",
@@ -53,7 +57,7 @@ infoBoxes model =
             ],
             Flex.container Flex.Column model.isMobile 
             [class "item-card", margin] [
-                h3 [] [text "Наше присуство на социјални мрежи."],
+                h3 [class "is-size-3"] [text "Наше присуство на социјални мрежи."],
                 Flex.container Flex.Row model.isMobile 
                 ["justify-content" :> "center" |> style_] [
                     a [href "https://www.linkedin.com/in/acepwns/", iconStyle] 
@@ -65,15 +69,12 @@ infoBoxes model =
             ],
             Flex.container Flex.Column model.isMobile 
             [class "item-card", margin] [
-                h3 [] [text "Работно време"],
+                h3 [class "is-size-3"] [text "Работно време"],
                 Flex.item [] [text "Секој работен ден од 8 - 18ч."],
                 Flex.item [] [text "Сабота од 10 - 16ч."],
                 Flex.item [] [text "Недела не работиме."]
             ]
         ]
-
-iconStyle : Attribute Msg
-iconStyle = style ["margin-left" :> "16px"]
 
 contactPage : Model -> Html Msg
 contactPage model =

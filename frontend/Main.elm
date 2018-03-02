@@ -2,11 +2,6 @@ import Html exposing (..)
 
 import Window
 
-import Task
-
-import Bootstrap.CDN as BootstrapCDN
-import Bootstrap.Navbar as Navbar
-
 import Flex
 import Styles exposing (..)
 import Model exposing (..)
@@ -19,19 +14,12 @@ type alias Flags = {
     userAgent: String
 }
 
-initialSizeCmd : Cmd Msg
-initialSizeCmd = Task.perform WindowResized Window.size
-
 initialization : Flags -> (Model, Cmd Msg)
 initialization flags = 
-    let
-        (navbarState, navbarCmd) = Navbar.initialState NavbarMsg
-    in (
-        {initialModel | userAgent = flags.userAgent, 
-                        isMobile  = userAgentCheckMobile flags.userAgent,
-                        navbarState = navbarState},
-        Cmd.batch [initialSizeCmd, navbarCmd]
-    )
+    ({initialModel |
+        userAgent = flags.userAgent, 
+        isMobile  = userAgentCheckMobile flags.userAgent
+      }, Cmd.none)
 
 -- UPDATE
 
@@ -48,7 +36,6 @@ update msg model =
                         ProgrammingClicked -> updatePage PageProgramming
                         NewsClicked        -> updatePage PageNews
                         ContactClicked     -> updatePage PageContact
-                NavbarMsg newState -> { model | navbarState = newState }
         newCmd = Cmd.none
    in 
        (newModel, newCmd)
@@ -57,22 +44,19 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model = 
-    Sub.batch 
-        [Window.resizes WindowResized,
-         Navbar.subscriptions model.navbarState NavbarMsg]
+    Window.resizes WindowResized
 
 view : Model -> Html.Html Msg
 view model =
     Flex.container Flex.Column model.isMobile [Flex.h100] [
-        BootstrapCDN.stylesheet,
-
         -- HEADER
         div [Flex.w100] [
             Header.createHeaderNavbar model
         ],
 
         -- MAIN CONTENT
-        div [Flex.w100, pageStyle, Flex.flexGrow 1] [createPage model]
+        div [Flex.w100, Flex.flexGrow 1, pageStyle] 
+            [createPage model]
     ]
 
 main : Program Flags Model Msg

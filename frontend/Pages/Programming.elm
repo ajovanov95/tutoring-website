@@ -28,7 +28,7 @@ cardLink content url tags =
 -- Sections
 section1 : Model -> List (Html Msg)
 section1 model =  
-    [h2 [style [("margin", "0.2em")]] [text "Области кои ги обработуваме"],
+    [h2 [style [("margin", "0.2em")], class "is-size-3"] [text "Области кои ги обработуваме"],
      rule,
     Grid.container (Grid.autoSpecification model.isMobile) [] 
     <| List.map card 
@@ -42,7 +42,7 @@ section1 model =
 
 section2 : Model -> List (Html Msg)
 section2 model = [
-    h2 [style [("margin", "0.5em")]] [text "Интегрирани развојни околини и едитори"],
+    h2 [style [("margin", "0.5em")], class "is-size-3"] [text "Интегрирани развојни околини и едитори"],
     rule,
     Grid.container (Grid.autoSpecification model.isMobile) [] 
     <| List.map (\(c, u, t) -> cardLink c u t) 
@@ -58,7 +58,7 @@ section2 model = [
 section3 : Model -> List (Html Msg)
 section3 model = 
     [
-        h2 [style [("margin", "0.5em")]] [text "Околини за извршување и пакети за развој"],
+        h2 [style [("margin", "0.5em")], class "is-size-3"] [text "Околини за извршување и пакети за развој"],
         rule,
         Grid.container (Grid.autoSpecification model.isMobile) [] 
         <| List.map (\(c, u, t) -> cardLink c u t) 
@@ -73,7 +73,7 @@ section3 model =
 section4 : Model -> List (Html Msg)
 section4 model =
      [  
-         h2 [style [("margin", "0.5em")]] [text "Линукс дистрибуции"],
+         h2 [style [("margin", "0.5em")], class "is-size-3"] [text "Линукс дистрибуции"],
          rule,
          p [] [text "За почетници препорачана линукс дистрибуција е ", 
                a [href "https://www.ubuntu.com/"] [text "Убунту"]

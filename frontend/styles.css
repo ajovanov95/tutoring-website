@@ -19,6 +19,10 @@ html, body {
     /* overflow-y: hidden; */
 }
 
+.brand-icon {
+    margin-right : 10px;
+}
+
 .page-style {
     font-size: 12pt;
     padding: 1em;
@@ -41,9 +45,9 @@ html, body {
 }
 
 .picture-frame {
-    width: 96px;
+    width: 128px;
     height: 128px;
-    border-radius: 16px;
+    border-radius: 64px;
 
     transition: transform 2s;
 }
@@ -53,7 +57,7 @@ html, body {
 }    
 
 .icon-wobble:hover {
-    animation: mini-wobble 1s;
+    animation: mini-wobble 1.5s;
 }
 
 .aboutme-text {
@@ -64,6 +68,6 @@ html, body {
 }
 
 p {
-    text-align: justify;
-    font-size: 16pt;
+    text-align: left;
+    font-size: 14pt;
 }

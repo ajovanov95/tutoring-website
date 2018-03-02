@@ -1,7 +1,5 @@
 module Model exposing(..)
 
-import Bootstrap.Navbar as Navbar
-
 import Window
 
 import Regex
@@ -21,7 +19,6 @@ type HeaderMsg =
     ContactClicked 
 
 type Msg = Header HeaderMsg |
-           NavbarMsg Navbar.State |
            WindowResized Window.Size
 
 type alias News = {
@@ -39,16 +36,11 @@ type alias Model = {
 
     windowSize: Window.Size,
 
-    isMobile: Bool,
-
-    navbarState : Navbar.State 
+    isMobile: Bool
 }
 
 initialModel : Model
-initialModel = 
-    let 
-        fst (a, _) = a
-    in {
+initialModel =  {
         page = PageHome,
 
         -- newsList = [],
@@ -63,9 +55,7 @@ initialModel =
 
         windowSize = {width = 1366, height = 768},
         
-        isMobile = False,
-
-        navbarState = fst <| Navbar.initialState NavbarMsg
+        isMobile = True -- mobile first
     }
 
 userAgentCheckMobile : String -> Bool
