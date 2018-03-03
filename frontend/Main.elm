@@ -1,8 +1,11 @@
 import Html exposing (..)
 
 import Window
+import Http
+import Debug
 
-import Flex
+import Layout.Flex as Flex
+
 import Styles exposing (..)
 import Model exposing (..)
 import Pages exposing (..)
@@ -14,12 +17,16 @@ type alias Flags = {
     userAgent: String
 }
 
+initialCmd : Cmd Msg
+initialCmd = Http.send NewsArrived
+               (Http.get "http://localhost:8000/news?limit=4" decodeNews)
+
 initialization : Flags -> (Model, Cmd Msg)
 initialization flags = 
     ({initialModel |
         userAgent = flags.userAgent, 
         isMobile  = userAgentCheckMobile flags.userAgent
-      }, Cmd.none)
+      }, initialCmd)
 
 -- UPDATE
 
@@ -36,6 +43,8 @@ update msg model =
                         ProgrammingClicked -> updatePage PageProgramming
                         NewsClicked        -> updatePage PageNews
                         ContactClicked     -> updatePage PageContact
+                NewsArrived (Ok nl)    -> { model | newsList = nl }
+                NewsArrived (Err e)    -> Debug.log ("ERROR: " ++ toString e) model
         newCmd = Cmd.none
    in 
        (newModel, newCmd)

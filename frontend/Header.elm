@@ -8,32 +8,36 @@ import Model exposing (..)
 
 import Styles exposing (..)
 
-makeIcon : String -> Bool -> Html Msg
-makeIcon name isActive = 
+makeIcon : String -> Model -> Page -> Html Msg
+makeIcon name model page = 
     let
-        styleActive  = ["color" :> "black"] |> style
+        isActive     = model.page == page
+        isMobile     = model.isMobile
+        styleActive  = (if isMobile then ["color" :> "#FF9F00"] 
+                                    else ["color" :> "white"]) |> style
     in
-    span 
-    ([class <| "fas " ++ name ++ " icon-wobble",
-     "margin-right" :> "10px" |> style_] 
-      ++ if isActive then [styleActive] else []) []
+        span 
+        ([class <| "fas " ++ name ++ " icon-wobble",
+        "margin-right" :> "10px" |> style_] 
+        ++ if isActive then [styleActive] else []) []
 
-makeNavbarItem : String -> String -> Bool -> HeaderMsg -> Page -> Html Msg
-makeNavbarItem content iconName isActive msg page =
+makeNavbarItem : String -> String -> Model -> HeaderMsg -> Page -> Html Msg
+makeNavbarItem content iconName model msg page =
     a [class "navbar-item", onClick <| Header msg] 
     [
-        makeIcon iconName isActive,
+        makeIcon iconName model page,
         text content
     ]
 
 createHeaderNavbar : Model -> Html Msg
 createHeaderNavbar model =
-    nav [class "navbar is-transparent is-warning"] 
+    nav [class "navbar is-transparent navbar-additions"] 
     [
         -- BRAND and BURGER
-        div [class "navbar-brand is-warning", "padding" :> "1.5em" |> style_] 
+        div [class "navbar-brand", 
+             ["margin-left" :> "0.75em", "color" :> "black"] |> style] 
         [
-            p [class "is-large"] [text "Часови"],
+            p [style ["font-size" :> "24pt"]] [text "Часови"],
 
             div [class "navbar-burger burger", attribute "data-target" "navMenu"] 
             [
@@ -50,14 +54,10 @@ createHeaderNavbar model =
             -- LEFT SIDE ITEMS
             div [class "navbar-start"] 
             [
-                makeNavbarItem "Дома" "fa-home" 
-                                (model.page == PageHome) HomeClicked PageHome,
-                makeNavbarItem "Програмирање" "fa-tasks"
-                                (model.page == PageProgramming) ProgrammingClicked PageProgramming,
-                makeNavbarItem "Вести" "fa-newspaper" 
-                                (model.page == PageNews) NewsClicked PageNews,
-                makeNavbarItem "Контакт" "fa-phone" 
-                                (model.page == PageContact) ContactClicked PageContact
+                makeNavbarItem "Дома" "fa-home" model HomeClicked PageHome,
+                makeNavbarItem "Програмирање" "fa-tasks" model ProgrammingClicked PageProgramming,
+                makeNavbarItem "Вести" "fa-newspaper" model NewsClicked PageNews,
+                makeNavbarItem "Контакт" "fa-phone" model ContactClicked PageContact
             ]
         ]
     ]

@@ -3,8 +3,7 @@ module Pages.Programming exposing (programmingPage)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
--- import Flex
-import Grid
+import Layout.Grid as Grid
 
 import Model exposing (..)
 import Styles exposing (..)

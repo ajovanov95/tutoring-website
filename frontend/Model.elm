@@ -1,10 +1,10 @@
 module Model exposing(..)
 
 import Window
-
 import Regex
-
 import Date
+import Http
+import Json.Decode as D
 
 type Page = 
     PageProgramming | 
@@ -19,7 +19,8 @@ type HeaderMsg =
     ContactClicked 
 
 type Msg = Header HeaderMsg |
-           WindowResized Window.Size
+           WindowResized Window.Size |
+           NewsArrived (Result Http.Error (List NewsGroup))
 
 type alias News = {
     title: String,
@@ -27,10 +28,35 @@ type alias News = {
     dateCreated: Date.Date
 }
 
+type alias NewsGroup = {
+    year : Int,
+    month : Int,
+    news : List News
+}
+
+decodeNews : D.Decoder (List (NewsGroup))
+decodeNews = 
+    let
+        dateDecoder = D.map Date.fromTime D.float
+
+        newsDecoder =
+            D.map3 News 
+                (D.field "title" D.string)
+                (D.field "content" D.string)
+                (D.field "dateCreated" dateDecoder)
+
+        groupDecoder = 
+            D.map3 NewsGroup 
+                (D.field "year" D.int)
+                (D.field "month" D.int)
+                (D.field "news" <| D.list newsDecoder)
+    in
+        D.list groupDecoder
+
 type alias Model = {
     page: Page,
     
-    newsList: List News,
+    newsList: List NewsGroup,
 
     userAgent: String,
 
@@ -43,13 +69,7 @@ initialModel : Model
 initialModel =  {
         page = PageHome,
 
-        -- newsList = [],
-
-        newsList = [{title = "Hello", content="This be news", 
-                    dateCreated = Date.fromTime 1234567891234},
-                    {title = "Message", content="Something very important",
-                    dateCreated = Date.fromTime 1254567861234}
-                ],
+        newsList = [],
 
         userAgent = "",
 

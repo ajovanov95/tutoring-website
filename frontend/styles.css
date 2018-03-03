@@ -19,8 +19,9 @@ html, body {
     /* overflow-y: hidden; */
 }
 
-.brand-icon {
-    margin-right : 10px;
+.navbar-additions {
+    background : linear-gradient(60deg, greenyellow, lightgreen, greenyellow); /* #FF9F00; */
+    max-height : 64px
 }
 
 .page-style {
@@ -48,13 +49,7 @@ html, body {
     width: 128px;
     height: 128px;
     border-radius: 64px;
-
-    transition: transform 2s;
 }
-
-.picture-frame:hover {
-    transform: scale(1.15, 1.15);
-}    
 
 .icon-wobble:hover {
     animation: mini-wobble 1.5s;

@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import Model exposing (..)
 import Styles exposing (..)
 
-import Flex
+import Layout.Flex as Flex
 
 emailForm : Bool -> Html Msg
 emailForm isMobile = 
@@ -49,8 +49,8 @@ infoBoxes model =
         ]
         [
             Flex.item [class "item-card"] [
-                h3 [class "is-size-3"] [text "Побарајте не на мобилен телефон"],
-                text "Можете да не добиете на 076 648 258.",
+                h3 [class "is-size-3"] [text "Телефон"],
+                text "076 648 258",
                 br [] [],
                 text "Бројот е активен и на ",
                 span [class "fab fa-viber", "color" :> "#59267c" |> style_] []
@@ -71,8 +71,7 @@ infoBoxes model =
             [class "item-card", margin] [
                 h3 [class "is-size-3"] [text "Работно време"],
                 Flex.item [] [text "Секој работен ден од 8 - 18ч."],
-                Flex.item [] [text "Сабота од 10 - 16ч."],
-                Flex.item [] [text "Недела не работиме."]
+                Flex.item [] [text "Сабота од 10 - 16ч."]
             ]
         ]
 

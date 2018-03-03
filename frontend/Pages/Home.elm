@@ -2,8 +2,8 @@ module Pages.Home exposing (homePage)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Flex
-
+import Layout.Flex as Flex
+ 
 import Model exposing (..)
 import Styles exposing (..)
 
@@ -37,10 +37,10 @@ pricelistTable =
         ]
 
 welcomeMessage : Html Msg
-welcomeMessage = p [class "hero is-info", 
+welcomeMessage = p [class "hero is-info is-bold", 
                     ["padding" :> "1.2em", 
                      "text-indent" :> "1.5em"] |> style] [
-           h3 [class "title"] 
+           h3 [class "title has-text-right-mobile"] 
            [text "Добредојдовте во светот на знаењето."],
            br [] [],
            text """
@@ -78,7 +78,7 @@ homePage model =
            [text "За нас"],
         aboutUsCard model,
         
-        h3 [class "is-size-3", style [("margin-top", if model.isMobile then "20px" else "10px")]] 
+        h3 [class "is-size-3 has-text-right-mobile", style [("margin-top", if model.isMobile then "20px" else "10px")]] 
             [text "Нашите ниски цени"],
         pricelistTable,
         
