@@ -19,8 +19,21 @@ html, body {
     /* overflow-y: hidden; */
 }
 
+.navbar-item {
+    color: black !important;
+
+    transition: color 0.25s linear;
+}
+
+@media screen and (min-width: 768) {
+    .navbar-item:hover {
+        color: white !important;
+    }
+}
+
 .navbar-additions {
-    background : linear-gradient(60deg, greenyellow, lightgreen, greenyellow); /* #FF9F00; */
+    /* background : linear-gradient(60deg, greenyellow, lightgreen, greenyellow); #FF9F00; */
+    background: rgb(255, 239, 91);
     max-height : 64px
 }
 

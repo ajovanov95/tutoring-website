@@ -13,7 +13,7 @@ makeIcon name model page =
     let
         isActive     = model.page == page
         isMobile     = model.isMobile
-        styleActive  = (if isMobile then ["color" :> "#FF9F00"] 
+        styleActive  = (if isMobile then ["color" :> "hsl(171, 100%, 41%)"] 
                                     else ["color" :> "white"]) |> style
     in
         span 
@@ -23,7 +23,7 @@ makeIcon name model page =
 
 makeNavbarItem : String -> String -> Model -> HeaderMsg -> Page -> Html Msg
 makeNavbarItem content iconName model msg page =
-    a [class "navbar-item", onClick <| Header msg] 
+    a [class "navbar-item no-hover", onClick <| Header msg] 
     [
         makeIcon iconName model page,
         text content
@@ -37,7 +37,9 @@ createHeaderNavbar model =
         div [class "navbar-brand", 
              ["margin-left" :> "0.75em", "color" :> "black"] |> style] 
         [
-            p [style ["font-size" :> "24pt"]] [text "Часови"],
+            p [style ["font-size" :> "20pt", 
+                      "margin-top" :> "0.16em",
+                      "margin-right" :> "0.85em"]] [text "Часови"],
 
             div [class "navbar-burger burger", attribute "data-target" "navMenu"] 
             [

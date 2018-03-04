@@ -3,6 +3,7 @@ import Html exposing (..)
 import Window
 import Http
 import Debug
+import Task
 
 import Layout.Flex as Flex
 
@@ -18,8 +19,13 @@ type alias Flags = {
 }
 
 initialCmd : Cmd Msg
-initialCmd = Http.send NewsArrived
-               (Http.get "http://localhost:8000/news?limit=4" decodeNews)
+initialCmd =
+    let fetchNewsCmd =
+         Http.send NewsArrived
+            (Http.get "http://localhost:8000/news?limit=4" decodeNews)
+        getWindowSizeCmd = Task.perform WindowResized Window.size
+    in
+        Cmd.batch [getWindowSizeCmd, fetchNewsCmd]
 
 initialization : Flags -> (Model, Cmd Msg)
 initialization flags = 
