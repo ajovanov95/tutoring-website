@@ -22,7 +22,7 @@ initialCmd : Cmd Msg
 initialCmd =
     let fetchNewsCmd =
          Http.send NewsArrived
-            (Http.get "http://localhost:8000/news?limit=4" decodeNews)
+            (Http.get "http://localhost:8000/news?limit=10" decodeNews)
         getWindowSizeCmd = Task.perform WindowResized Window.size
     in
         Cmd.batch [getWindowSizeCmd, fetchNewsCmd]
@@ -70,8 +70,9 @@ view model =
         ],
 
         -- MAIN CONTENT
-        div [Flex.w100, Flex.flexGrow 1, pageStyle] 
-            [createPage model]
+        div [Flex.w100, Flex.flexGrow 1, pageStyle] [
+            createPage model
+        ]
     ]
 
 main : Program Flags Model Msg

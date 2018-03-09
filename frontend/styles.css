@@ -32,7 +32,6 @@ html, body {
 }
 
 .navbar-additions {
-    /* background : linear-gradient(60deg, greenyellow, lightgreen, greenyellow); #FF9F00; */
     background: rgb(255, 239, 91);
     max-height : 64px
 }

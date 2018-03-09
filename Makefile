@@ -1,3 +1,5 @@
+STACK_BUILD_DIR=.stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/tutoring-backend-exe
+
 all:
 	mkdir -p release
 	# build frontend
@@ -9,7 +11,16 @@ all:
 	cp frontend/styles.css release/
 	# build backend
 	cd backend && stack build
-	cp backend/.stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/tutoring-backend-exe/tutoring-backend-exe release/tutoring-backend-exe
+	cp backend/$(STACK_BUILD_DIR)/tutoring-backend-exe release/tutoring-backend-exe
 	# build docker container (later)
 run:
 	cd release && ./tutoring-backend-exe
+
+migrate:
+	cd release && ./tutoring-backend-exe migrate
+
+test-data:
+	cd release && ./tutoring-backend-exe test-data
+
+dump-sqlite:
+	sqlite3 release/database.db "SELECT * FROM news"

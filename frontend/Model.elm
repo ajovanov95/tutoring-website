@@ -37,13 +37,14 @@ type alias NewsGroup = {
 decodeNews : D.Decoder (List (NewsGroup))
 decodeNews = 
     let
-        dateDecoder = D.map Date.fromTime D.float
+        dateDecoder = 
+            D.map (Result.withDefault (Date.fromTime 0) << Date.fromString) D.string
 
         newsDecoder =
             D.map3 News 
-                (D.field "title" D.string)
-                (D.field "content" D.string)
-                (D.field "dateCreated" dateDecoder)
+                (D.field "newsTitle" D.string)
+                (D.field "newsContent" D.string)
+                (D.field "newsDateCreated" dateDecoder)
 
         groupDecoder = 
             D.map3 NewsGroup 

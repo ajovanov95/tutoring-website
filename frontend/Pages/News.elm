@@ -18,7 +18,7 @@ newsCard {title, content, dateCreated} =
         month = toString <| Date.month dateCreated
         day   = toString <| Date.day dateCreated
 
-        niceDate = day ++ "." ++ month ++ "." ++ year
+        niceDate = day ++ ". " ++ month ++ ". " ++ year
     in
         div [class "item-card"] 
         [
