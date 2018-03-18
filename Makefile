@@ -24,5 +24,8 @@ migrate:
 test-data:
 	cd release && ./tutoring-backend-exe test-data
 
+drop-data:
+	sqlite3 release/database.db "DROP TABLE news"
+
 dump-sqlite:
 	sqlite3 release/database.db "SELECT * FROM news"

@@ -54,8 +54,8 @@ instance FromJSON Email
 
 dummyNews = 
     let 
-        t0 = UTCTime (fromJust $ fromGregorianValid 2016 4 15) 0
-        t1 = UTCTime (fromJust $ fromGregorianValid 2015 3 22) 0
+        t0 = UTCTime (fromJust $ fromGregorianValid 2018 3 15) 0
+        t1 = UTCTime (fromJust $ fromGregorianValid 2017 11 22) 0
     in    
         [
             News "Тест порака" "Здраво свет" t0,
