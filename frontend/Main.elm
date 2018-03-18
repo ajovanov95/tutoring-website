@@ -5,12 +5,18 @@ import Http
 import Debug
 import Task
 
+import Json.Decode as JD
+import Json.Encode as JE
+
 import Layout.Flex as Flex
 
 import Styles exposing (..)
 import Model exposing (..)
 import Pages exposing (..)
 import Header
+
+backendUrl : String
+backendUrl = "http://localhost:8000/"
 
 -- INIT
 
@@ -22,7 +28,7 @@ initialCmd : Cmd Msg
 initialCmd =
     let fetchNewsCmd =
          Http.send NewsArrived
-            (Http.get "http://localhost:8000/news?limit=10" decodeNews)
+            (Http.get (backendUrl ++ "news?limit=10") decodeNews)
         getWindowSizeCmd = Task.perform WindowResized Window.size
     in
         Cmd.batch [getWindowSizeCmd, fetchNewsCmd]
@@ -49,9 +55,38 @@ update msg model =
                         ProgrammingClicked -> updatePage PageProgramming
                         NewsClicked        -> updatePage PageNews
                         ContactClicked     -> updatePage PageContact
+
                 NewsArrived (Ok nl)    -> { model | newsList = nl }
                 NewsArrived (Err e)    -> Debug.log ("ERROR: " ++ toString e) model
-        newCmd = Cmd.none
+
+                EmailConfirmationArrived (Ok s)  -> 
+                    { model | emailConfirmation = Just s }
+                EmailConfirmationArrived (Err e) -> 
+                    Debug.log ("ERROR: " ++ toString e) model
+
+                EmailSubjectChanged s -> 
+                    if Model.checkEmailAddressForValidity s then
+                        { model | emailAddressTo = s, isAddrValid = True }
+                    else
+                        { model | isAddrValid = False }
+
+                EmailBodyChanged    s -> { model | emailContent = s }
+
+                SendEmail -> model
+        newCmd = 
+            case msg of 
+                SendEmail ->
+                    let 
+                        emailReqBody = 
+                            JE.object [("receiverAddress", JE.string model.emailAddressTo), 
+                                       ("messageContent", JE.string model.emailContent)] |> 
+                            Http.jsonBody   
+                        cmd = 
+                            Http.send EmailConfirmationArrived 
+                                (Http.post (backendUrl ++ "send-mail") emailReqBody JD.string)
+                    in
+                        if model.isAddrValid then cmd else Cmd.none
+                _         -> Cmd.none 
    in 
        (newModel, newCmd)
 

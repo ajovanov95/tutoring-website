@@ -20,7 +20,11 @@ type HeaderMsg =
 
 type Msg = Header HeaderMsg |
            WindowResized Window.Size |
-           NewsArrived (Result Http.Error (List NewsGroup))
+           EmailSubjectChanged String |
+           EmailBodyChanged String |
+           SendEmail |
+           NewsArrived (Result Http.Error (List NewsGroup)) |
+           EmailConfirmationArrived (Result Http.Error String)
 
 type alias News = {
     title: String,
@@ -54,28 +58,40 @@ decodeNews =
     in
         D.list groupDecoder
 
+
+checkEmailAddressForValidity : String -> Bool
+checkEmailAddressForValidity addr =
+    let 
+        re = Regex.regex ".+@.+\\.com(\\.mk)?"
+    in
+        Regex.contains re addr
+
 type alias Model = {
     page: Page,
-    
     newsList: List NewsGroup,
 
+    emailAddressTo: String,
+    emailContent: String,
+    emailConfirmation: Maybe String,
+    isAddrValid: Bool,
+
     userAgent: String,
-
     windowSize: Window.Size,
-
     isMobile: Bool
 }
 
 initialModel : Model
 initialModel =  {
         page = PageHome,
-
         newsList = [],
 
-        userAgent = "",
+        emailAddressTo = "",
+        emailContent = "",
+        emailConfirmation = Nothing,
+        isAddrValid = True,
 
+        userAgent = "",
         windowSize = {width = 1366, height = 768},
-        
         isMobile = True -- mobile first
     }
 

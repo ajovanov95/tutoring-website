@@ -2,14 +2,15 @@ module Pages.Contact exposing (contactPage)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
 import Model exposing (..)
 import Styles exposing (..)
 
 import Layout.Flex as Flex
 
-emailForm : Bool -> Html Msg
-emailForm isMobile = 
+emailForm : Model -> Html Msg
+emailForm model = 
     div [Flex.flexBasis 50, class "item-card"]
         [
             h3 [class "is-size-3"] [text "Пишете ни порака"],
@@ -18,16 +19,20 @@ emailForm isMobile =
             [
                 label [for "myemail", class "label"] [text "Вашата адреса на електронска пошта"],
 
-                input [class "input is-primary", type_ "email", id "myemail"] []
+                input [class "input", type_ "email", id "myemail",
+                       onInput EmailSubjectChanged,
+                       class (if model.isAddrValid then "is-primary" else "is-danger")
+                       ] []
             ],
 
             div [class "field"]
             [
                 label [for "myarea", class "label"] [text "Вашата порака"],
-                textarea [class "textarea is-primary", rows 8, id "myemail"] []
+                textarea [class "textarea is-primary", rows 8, id "myemail",
+                          onInput EmailBodyChanged] []
             ],
 
-            button [class "button is-primary"] [text "Испрати порака"]
+            button [class "button is-primary", onClick SendEmail] [text "Испрати порака"]
         ]
 
 iconStyle : Attribute Msg
@@ -77,10 +82,22 @@ infoBoxes model =
 
 contactPage : Model -> Html Msg
 contactPage model =
-    Flex.container Flex.Auto model.isMobile 
+    Flex.container Flex.Column model.isMobile 
     [] 
     [
-        emailForm model.isMobile,
+        Flex.container Flex.Auto model.isMobile 
+        [] 
+        [
+            emailForm model,
 
-        infoBoxes model
+            infoBoxes model
+        ], 
+        (case model.emailConfirmation of 
+            Nothing -> br [] []
+            Just s  -> 
+                div [class "hero is-success", 
+                     ("padding", "15px") |> style_,
+                     ("margin-top", "20px") |> style_] 
+                    [p [class "suptitle"] [text s]]
+        ) 
     ]

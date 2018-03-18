@@ -4,7 +4,6 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-
 module Handlers where
 
 import Data
@@ -22,6 +21,8 @@ import Database.Persist.Sqlite(runSqlite, SqlBackend)
 import Data.Time
 import Data.Maybe(fromJust, maybe)
 import Data.List(groupBy)
+
+import System.Process(callProcess)
 
 makeNewsGroups :: [News] -> [NewsGroup]
 makeNewsGroups news =
@@ -46,10 +47,25 @@ handlerNews limit =
     in
         (liftIO $ runSqlite "database.db" getNewsAction) >>= return
 
--- Nothing means no error
-handlerEmail :: Email -> Handler (Maybe String)
-handlerEmail Email{..} = do 
-    return $ Nothing
+handlerEmail :: Email -> Handler String
+handlerEmail Email{..} = do
+    liftIO $ do 
+        writeFile "/tmp/mailbody.txt" messageContent
+        callProcess "/usr/bin/sendemail" args
+        writeFile "/tmp/mailbody.txt" ""
 
-redirectHome :: Handler Int
-redirectHome = throwError $ err301 { errHeaders = [("Location", "/index.html")] }
+    return "Вашата порака е успешно пратена."
+
+    where
+        args = ["-f", "aleksandar.jovanov.automail@gmail.com",
+                "-u", "Baranje casovi za " ++ receiverAddress,
+                "-t", "aleksandar.jovanov.1995@gmail.com",
+                "-s", "smtp.gmail.com:587",
+                "-o", "tls=yes",
+                "-xu", "aleksandar.jovanov.automail@gmail.com",
+                "-xp", "RwtskNsTkfEf7PMDWWtLsmeKj2otqjhttpJ7FApg3TNJ9DEdPxSrBsKhA4hRDcfa",
+                 "-o", "message-file=/tmp/mailbody.txt"]
+
+redirectHome :: Handler String
+redirectHome = 
+    throwError $ err301 { errHeaders = [("Location", "/index.html")] }

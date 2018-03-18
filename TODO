@@ -1,3 +1,2 @@
-1. Send an e-mail via some haskell library in a secure way.
-2. Find a way to add logging capabilities to backend.
-3. Deploy to a docker image and host on openshift.
+1. Find a way to add logging capabilities to backend.
+2. Deploy to a docker image and host on openshift.
