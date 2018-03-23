@@ -1,3 +1,5 @@
-1. Find a way to add logging capabilities to backend.
-2. Deploy to a docker image and run locally using docker.
-3. Deploy docker image to openshift.
+1. Find a way to add logging capabilities to backend and do error handling. [IN PROGRESS]
+2. Deploy to a docker image and run locally using docker. [DONE]
+3. Fix security vulnerability where anyone can get the exe just by url (caused by serving whole .)
+4. Develop a part of website visible only to you to insert news.
+5. Deploy docker image to openshift.

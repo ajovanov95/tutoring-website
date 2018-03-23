@@ -15,6 +15,7 @@ import Database.Persist.Sqlite
 import Servant
 
 import System.Environment
+import System.Directory
 
 import Data
 import Api
@@ -38,8 +39,12 @@ main = do
     else if "test-data" `elem` args then
         runSqlite "database.db" insertDummyNewsToDb
     else do 
-        -- Run sqlite migrations
         print $ "Running the server on port " ++ show port
+        cwd  <- getCurrentDirectory
+        print $ "Running in " ++ cwd
+        print $ "Other files in this directory are: "
+        getDirectoryContents cwd >>= print
+
         -- Run the server
         run port app
     where port = 8000

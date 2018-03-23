@@ -1,7 +1,5 @@
 STACK_BUILD_DIR=.stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/tutoring-backend-exe
 
-# sudo apt install sendemail for mail support
-
 all:
 	mkdir -p release
 	# build frontend
@@ -14,10 +12,23 @@ all:
 	# build backend
 	cd backend && stack build
 	cp backend/$(STACK_BUILD_DIR)/tutoring-backend-exe release/tutoring-backend-exe
-	# build docker container (later)
+	cp backend/docker-run.sh release/
 run:
 	cd release && ./tutoring-backend-exe
 
+docker-build:
+	cd release && ./tutoring-backend-exe migrate
+	docker build -t aleksandar-tutoring-website .
+
+docker-stop:
+	docker container stop tutoring-backend
+	docker container rm tutoring-backend
+
+# Run locally on development machine using docker
+docker-run:
+	docker run -d -p 8000:8000 --name tutoring-backend aleksandar-tutoring-website
+
+# Actions related to database
 migrate:
 	cd release && ./tutoring-backend-exe migrate
 

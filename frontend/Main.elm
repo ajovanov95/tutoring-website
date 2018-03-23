@@ -81,9 +81,12 @@ update msg model =
                             JE.object [("receiverAddress", JE.string model.emailAddressTo), 
                                        ("messageContent", JE.string model.emailContent)] |> 
                             Http.jsonBody   
+
+                        url = backendUrl ++ "send-mail"
+                        
                         cmd = 
                             Http.send EmailConfirmationArrived 
-                                (Http.post (backendUrl ++ "send-mail") emailReqBody JD.string)
+                                (Http.post url emailReqBody JD.string)
                     in
                         if model.isAddrValid then cmd else Cmd.none
                 _         -> Cmd.none 
