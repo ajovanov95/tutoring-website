@@ -42,6 +42,7 @@ data NewsGroup = NewsGroup {
 } deriving (Eq, Show, Generic)
 
 instance ToJSON News
+instance FromJSON News
 
 instance ToJSON NewsGroup
 

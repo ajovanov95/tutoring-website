@@ -19,13 +19,15 @@ import System.Directory
 
 import Data
 import Api
-import Handlers
+import HandlersUser
+import HandlersAdministration
 
 server :: Server WholeApi
-server = handlerNews  :<|> 
+server = handlerNews  :<|>
+         handlerInsertNews :<|>
          handlerEmail :<|> 
          redirectHome :<|>
-         (serveDirectoryWebApp ".") -- this will serve the static files
+         (serveDirectoryWebApp "static")
 
 app :: Application 
 app = wholeApi `serve` server

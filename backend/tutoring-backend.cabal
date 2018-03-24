@@ -17,7 +17,8 @@ executable tutoring-backend-exe
   other-modules: 
     Data,
     Api, 
-    Handlers
+    HandlersUser,
+    HandlersAdministration
   hs-source-dirs:
       app
   ghc-options:

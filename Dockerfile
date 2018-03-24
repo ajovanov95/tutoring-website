@@ -1,6 +1,4 @@
 # Issues
-# 1. Ports
-# 2. Database and volumes
 # 3. Various open shift stuff
 
 FROM ubuntu:18.04
@@ -15,14 +13,14 @@ RUN apt install -y sendemail sqlite3
 # Compile code approach
 # RUN curl -sSL https://get.haskellstack.org/ | sh
 
-RUN mkdir -p /home/aleksandar/tutoring-website/
+RUN mkdir -p /home/aleksandar/tutoring-website/static
 
 # copy files frontend
-COPY release/images/aleksandar.jpg /home/aleksandar/tutoring-website/images/aleksandar.jpg
-COPY release/bulma.css /home/aleksandar/tutoring-website/bulma.css
-COPY release/styles.css /home/aleksandar/tutoring-website/styles.css
-COPY release/main.js /home/aleksandar/tutoring-website/main.js
-COPY release/index.html /home/aleksandar/tutoring-website/index.html
+COPY release/static/images/aleksandar.jpg /home/aleksandar/tutoring-website/static/images/aleksandar.jpg
+COPY release/static/bulma.css /home/aleksandar/tutoring-website/static/bulma.css
+COPY release/static/styles.css /home/aleksandar/tutoring-website/static/styles.css
+COPY release/static/main.js /home/aleksandar/tutoring-website/static/main.js
+COPY release/static/index.html /home/aleksandar/tutoring-website/static/index.html
 
 # copy files backend
 COPY release/database.db /home/aleksandar/tutoring-website/database.db

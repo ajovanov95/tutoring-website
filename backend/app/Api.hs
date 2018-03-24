@@ -15,13 +15,21 @@ import Data
 
 import Servant
 
-type NewsApi      = "news"      :> QueryParam "limit" Int :> Get  '[JSON] [NewsGroup]
-type SendEmailApi = "send-mail" :> ReqBody '[JSON] Email  :> Post '[JSON] String
+type NewsApi       = "news"        :> QueryParam "limit" Int :> Get  '[JSON] [NewsGroup]
+
+type InsertNewsApi = "insert-news" :> ReqBody '[JSON] News :> Post '[PlainText] String
+
+type SendEmailApi  = "send-mail"   :> ReqBody '[JSON] Email  :> Post '[JSON] String
+
 
 -- Dummy return type
 type RedirectApi = Get '[PlainText] String
 
-type WholeApi = NewsApi :<|> SendEmailApi :<|> RedirectApi :<|> Raw
+type WholeApi = NewsApi :<|> 
+                InsertNewsApi :<|> 
+                SendEmailApi :<|> 
+                RedirectApi :<|> 
+                Raw
 
 wholeApi :: Proxy WholeApi
 wholeApi = Proxy
