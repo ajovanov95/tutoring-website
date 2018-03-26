@@ -6,7 +6,7 @@ import Json.Decode as D
 import Http
 import Date
 
-import Date.Format
+import Date.Format exposing (format)
 
 import Model exposing (..)
 
@@ -61,12 +61,12 @@ insertNewsCmd news token =
     let 
         url = backendUrl ++ "insert-news/" ++ (toString token) ++ "/"
 
-        dateValue = E.string <| format "%Y-%m-%d %H:%M:%S" news.dateCreated
+        dateStr = format "%Y-%m-%d %H:%M:%S" news.dateCreated
 
         reqBody =
             E.object [("newsTitle", E.string news.title),
                       ("newsContent", E.string news.content),
-                      ("newsDateCreated", E.string ())] |> Http.jsonBody
+                      ("newsDateCreated", E.string dateStr)] |> Http.jsonBody
         
         req = Http.post url reqBody D.string
 
@@ -84,7 +84,7 @@ requestTokenCmd =
     let
         url = backendUrl ++ "request-token"
 
-        req = Http.post url (E.object []) D.string
+        req = Http.post url Http.emptyBody D.string
 
         resultParse r =
             case r of
