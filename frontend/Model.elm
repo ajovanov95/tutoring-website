@@ -4,7 +4,6 @@ import Window
 import Regex
 import Date
 import Http
-import Json.Decode as D
 
 type Page = 
     PageProgramming | 
@@ -38,27 +37,6 @@ type alias NewsGroup = {
     news : List News
 }
 
-decodeNews : D.Decoder (List (NewsGroup))
-decodeNews = 
-    let
-        dateDecoder = 
-            D.map (Result.withDefault (Date.fromTime 0) << Date.fromString) D.string
-
-        newsDecoder =
-            D.map3 News 
-                (D.field "newsTitle" D.string)
-                (D.field "newsContent" D.string)
-                (D.field "newsDateCreated" dateDecoder)
-
-        groupDecoder = 
-            D.map3 NewsGroup 
-                (D.field "year" D.int)
-                (D.field "month" D.int)
-                (D.field "news" <| D.list newsDecoder)
-    in
-        D.list groupDecoder
-
-
 checkEmailAddressForValidity : String -> Bool
 checkEmailAddressForValidity addr =
     let 
@@ -80,6 +58,27 @@ type alias Model = {
     isMobile: Bool
 }
 
+type AdminMsg = 
+    RequestToken |
+    InsertNews |
+
+    TokenFieldChanged String |
+    NewsTitleChange String |
+    NewsContentChange String |
+    InsertNewsButtonClicked |
+    RequestTokenButtonClicked |
+
+    DateChanged Date.Date | 
+
+    PostResponse String
+
+type alias AdminModel = {
+    token : Int,
+    newsTitle: String,
+    newsContent: String,
+    currentDate: Date.Date
+}
+
 initialModel : Model
 initialModel =  {
         page = PageHome,
@@ -93,6 +92,13 @@ initialModel =  {
         userAgent = "",
         windowSize = {width = 1366, height = 768},
         isMobile = True -- mobile first
+    }
+
+initialAdminModel = {
+    token = 0,
+    newsTitle = "",
+    newsField = "",
+    currentDate = Date.fromTime 1
     }
 
 userAgentCheckMobile : String -> Bool

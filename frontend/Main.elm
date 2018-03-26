@@ -1,12 +1,8 @@
 import Html exposing (..)
 
 import Window
-import Http
 import Debug
 import Task
-
-import Json.Decode as JD
-import Json.Encode as JE
 
 import Layout.Flex as Flex
 
@@ -15,8 +11,7 @@ import Model exposing (..)
 import Pages exposing (..)
 import Header
 
-backendUrl : String
-backendUrl = "http://localhost:8000/"
+import Api as Api
 
 -- INIT
 
@@ -26,12 +21,10 @@ type alias Flags = {
 
 initialCmd : Cmd Msg
 initialCmd =
-    let fetchNewsCmd =
-         Http.send NewsArrived
-            (Http.get (backendUrl ++ "news?limit=10") decodeNews)
+    let 
         getWindowSizeCmd = Task.perform WindowResized Window.size
     in
-        Cmd.batch [getWindowSizeCmd, fetchNewsCmd]
+        Cmd.batch [getWindowSizeCmd, Api.getNewsCmd]
 
 initialization : Flags -> (Model, Cmd Msg)
 initialization flags = 
@@ -70,25 +63,12 @@ update msg model =
                     else
                         { model | isAddrValid = False }
 
-                EmailBodyChanged    s -> { model | emailContent = s }
+                EmailBodyChanged s -> { model | emailContent = s }
 
                 SendEmail -> model
         newCmd = 
             case msg of 
-                SendEmail ->
-                    let 
-                        emailReqBody = 
-                            JE.object [("receiverAddress", JE.string model.emailAddressTo), 
-                                       ("messageContent", JE.string model.emailContent)] |> 
-                            Http.jsonBody   
-
-                        url = backendUrl ++ "send-mail"
-                        
-                        cmd = 
-                            Http.send EmailConfirmationArrived 
-                                (Http.post url emailReqBody JD.string)
-                    in
-                        if model.isAddrValid then cmd else Cmd.none
+                SendEmail -> Api.sendEmailCmd model
                 _         -> Cmd.none 
    in 
        (newModel, newCmd)
