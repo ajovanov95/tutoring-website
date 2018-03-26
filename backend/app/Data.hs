@@ -46,12 +46,17 @@ instance FromJSON News
 
 instance ToJSON NewsGroup
 
+type ReceiverAddress = String
+type MessageContent = String
+
 data Email = Email {
-    receiverAddress :: String,
-    messageContent :: String
+    receiverAddress :: ReceiverAddress,
+    messageContent :: MessageContent
 } deriving (Eq, Show, Generic)
 
 instance FromJSON Email
+
+type Token = Integer
 
 dummyNews = 
     let 

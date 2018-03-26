@@ -17,18 +17,23 @@ import Servant
 
 type NewsApi       = "news"        :> QueryParam "limit" Int :> Get  '[JSON] [NewsGroup]
 
-type InsertNewsApi = "insert-news" :> ReqBody '[JSON] News :> Post '[PlainText] String
+type InsertNewsApi = "insert-news" :> Capture "token" Token :> ReqBody '[JSON] News :> Post '[PlainText] String
 
 type SendEmailApi  = "send-mail"   :> ReqBody '[JSON] Email  :> Post '[JSON] String
 
+type RequestTokenApi = "request-token" :> Post '[JSON] ()
 
--- Dummy return type
-type RedirectApi = Get '[PlainText] String
+-- These are only used for redirects
+type RedirectAdminApi = "admin" :> Get '[PlainText] String
+
+type RedirectHomeApi = Get '[PlainText] String
 
 type WholeApi = NewsApi :<|> 
                 InsertNewsApi :<|> 
                 SendEmailApi :<|> 
-                RedirectApi :<|> 
+                RequestTokenApi :<|>
+                RedirectHomeApi :<|> 
+                RedirectAdminApi :<|>
                 Raw
 
 wholeApi :: Proxy WholeApi

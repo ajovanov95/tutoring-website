@@ -7,6 +7,9 @@
 module HandlersUser where
 
 import Data
+import Utilities
+
+import Control.Exception(try, SomeException)
 
 import Servant
 import Network.Wai
@@ -21,8 +24,6 @@ import Database.Persist.Sqlite(runSqlite, SqlBackend)
 import Data.Time
 import Data.Maybe(fromJust, maybe)
 import Data.List(groupBy)
-
-import System.Process(callProcess)
 
 makeNewsGroups :: [News] -> [NewsGroup]
 makeNewsGroups news =
@@ -49,23 +50,17 @@ handlerNews limit =
 
 handlerEmail :: Email -> Handler String
 handlerEmail Email{..} = do
-    liftIO $ do 
-        writeFile "/tmp/mailbody.txt" messageContent
-        callProcess "/usr/bin/sendemail" args
-        writeFile "/tmp/mailbody.txt" ""
+    res <- liftIO tryAction
 
-    return "Вашата порака е успешно пратена."
-
-    where
-        args = ["-f", "aleksandar.jovanov.automail@gmail.com",
-                "-u", "Baranje casovi za " ++ receiverAddress,
-                "-t", "aleksandar.jovanov.1995@gmail.com",
-                "-s", "smtp.gmail.com:587",
-                "-o", "tls=yes",
-                "-xu", "aleksandar.jovanov.automail@gmail.com",
-                "-xp", "RwtskNsTkfEf7PMDWWtLsmeKj2otqjhttpJ7FApg3TNJ9DEdPxSrBsKhA4hRDcfa",
-                 "-o", "message-file=/tmp/mailbody.txt"]
+    case res of
+        Left e -> do 
+            liftIO $ print $ "ERROR: " ++ (show e) 
+            return $ "Дојде до грешка при праќање."
+        Right _ -> return $ "Вашата порака е успешно пратена."
+    where 
+        title = ("Baranje casovi za " ++ receiverAddress)
+        tryAction = (try $ sendEmail title messageContent) :: IO (Either SomeException ())
 
 redirectHome :: Handler String
-redirectHome = 
-    throwError $ err301 { errHeaders = [("Location", "/index.html")] }
+redirectHome = redirect "/index.html"
+    

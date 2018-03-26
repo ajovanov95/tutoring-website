@@ -21,16 +21,20 @@ import Data
 import Api
 import HandlersUser
 import HandlersAdministration
+import Utilities
 
-server :: Server WholeApi
-server = handlerNews  :<|>
-         handlerInsertNews :<|>
-         handlerEmail :<|> 
-         redirectHome :<|>
-         (serveDirectoryWebApp "static")
+server :: TokenStateVar -> Server WholeApi
+server tokenStateVariable = 
+    handlerNews  :<|>
+    handlerInsertNews tokenStateVariable :<|>
+    handlerEmail :<|> 
+    handlerRequestToken tokenStateVariable :<|>
+    redirectHome :<|>
+    redirectAdmin :<|>
+    (serveDirectoryWebApp "static")
 
-app :: Application 
-app = wholeApi `serve` server
+app :: TokenStateVar -> Application 
+app tokenStateVariable = wholeApi `serve` (server tokenStateVariable)
 
 main :: IO ()
 main = do
@@ -47,6 +51,8 @@ main = do
         print $ "Other files in this directory are: "
         getDirectoryContents cwd >>= print
 
+        tokenStateVariable <- makeTokenStateVar
+
         -- Run the server
-        run port app
+        run port (app tokenStateVariable)
     where port = 8000
