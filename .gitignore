@@ -1,5 +1,6 @@
 frontend/elm-stuff/*
 frontend/main.html
 frontend/main.js
+frontend/admin.js
 backend/.stack-work
 release/

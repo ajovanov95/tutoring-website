@@ -58,25 +58,25 @@ type alias Model = {
     isMobile: Bool
 }
 
-type AdminMsg = 
-    RequestToken |
-    InsertNews |
+type AdminMsg =  
+    TimeTicked |
+    DateChanged Date.Date |
 
     TokenFieldChanged String |
-    NewsTitleChange String |
-    NewsContentChange String |
+    NewsTitleChanged String |
+    NewsContentChanged String |
+    
     InsertNewsButtonClicked |
     RequestTokenButtonClicked |
-
-    DateChanged Date.Date | 
 
     PostResponse String
 
 type alias AdminModel = {
-    token : Int,
+    token : String,
     newsTitle: String,
     newsContent: String,
-    currentDate: Date.Date
+    currentDate: Date.Date,
+    actionResponse: String
 }
 
 initialModel : Model
@@ -94,11 +94,13 @@ initialModel =  {
         isMobile = True -- mobile first
     }
 
+initialAdminModel : AdminModel
 initialAdminModel = {
-    token = 0,
+    token = "0",
     newsTitle = "",
-    newsField = "",
-    currentDate = Date.fromTime 1
+    newsContent = "",
+    currentDate = Date.fromTime 1,
+    actionResponse = ""
     }
 
 userAgentCheckMobile : String -> Bool

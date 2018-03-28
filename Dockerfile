@@ -21,6 +21,8 @@ COPY release/static/bulma.css /home/aleksandar/tutoring-website/static/bulma.css
 COPY release/static/styles.css /home/aleksandar/tutoring-website/static/styles.css
 COPY release/static/main.js /home/aleksandar/tutoring-website/static/main.js
 COPY release/static/index.html /home/aleksandar/tutoring-website/static/index.html
+COPY release/static/admin.html /home/aleksandar/tutoring-website/static/admin.html
+COPY release/static/admin.js /home/aleksandar/tutoring-website/static/admin.js
 
 # copy files backend
 COPY release/database.db /home/aleksandar/tutoring-website/database.db

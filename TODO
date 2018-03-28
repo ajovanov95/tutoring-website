@@ -1,3 +1,2 @@
-1. Find a way to add logging capabilities to backend and do error handling. [IN PROGRESS]
-2. Develop a part of website visible only to you to insert news. [IN PROGRESS]
-3. Deploy docker image to openshift.
+1. Develop a part of website visible only to you to insert news. [70% DONE]
+3. Deploy docker image to openshift. 

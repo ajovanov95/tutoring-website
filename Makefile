@@ -4,11 +4,15 @@ all:
 	mkdir -p release/static/
 	# build frontend
 	cd frontend && elm-make Main.elm --output main.js
+	cd frontend && elm-make Admin.elm --output admin.js
+	# copy files frontend
 	cp -r frontend/images/ release/static/
 	cp frontend/index.html release/static/
 	cp frontend/main.js    release/static/
 	cp frontend/bulma.css  release/static/
 	cp frontend/styles.css release/static/
+	cp frontend/admin.html release/static/
+	cp frontend/admin.js   release/static/
 	# build backend
 	cd backend && stack build
 	cp backend/$(STACK_BUILD_DIR)/tutoring-backend-exe release/tutoring-backend-exe
