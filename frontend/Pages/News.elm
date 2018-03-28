@@ -11,6 +11,8 @@ import Html.Attributes exposing (..)
 
 import Date
 
+import Markdown
+
 newsCard : News -> Html Msg
 newsCard {title, content, dateCreated} =
     let
@@ -23,7 +25,7 @@ newsCard {title, content, dateCreated} =
         div [class "item-card"] 
         [
             h4 [class "has-text-center is-size-5"] [text title],
-            p  [class "has-text-justify"] [text content],
+            Markdown.toHtml [class "has-text-justify"] content,
             h6 [class "has-text-center is-size-6"] [text niceDate]
         ]
 
@@ -49,5 +51,11 @@ newsGroupView model grp =
 
 newsPage : Model -> Html Msg 
 newsPage model = 
-    Flex.container Flex.Column model.isMobile [] 
-        <| List.map (newsGroupView model) model.newsList
+    if (List.length model.newsList) > 0 then
+        Flex.container Flex.Column model.isMobile [] 
+            <| List.map (newsGroupView model) model.newsList
+    else
+        Flex.container Flex.Column model.isMobile
+        [["align-items" :> "center", "justify-content" :> "center"] |> style, 
+         Flex.h100, class "is-size-2"]
+        [text "Сеуште нема вести. Александар е веројатно слободен."]

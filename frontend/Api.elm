@@ -56,12 +56,12 @@ sendEmailCmd model =
     in
         if model.isAddrValid then cmd else Cmd.none
 
-insertNewsCmd : News -> Int -> Cmd AdminMsg
+insertNewsCmd : News -> String -> Cmd AdminMsg
 insertNewsCmd news token =
     let 
-        url = backendUrl ++ "insert-news/" ++ (toString token) ++ "/"
+        url = backendUrl ++ "insert-news/" ++ token ++ "/"
 
-        dateStr = format "%Y-%m-%d %H:%M:%S" news.dateCreated
+        dateStr = format "%Y-%m-%dT%H:%M:%SZ" news.dateCreated
 
         reqBody =
             E.object [("newsTitle", E.string news.title),
@@ -84,7 +84,7 @@ requestTokenCmd =
     let
         url = backendUrl ++ "request-token"
 
-        req = Http.post url Http.emptyBody D.string
+        req = Http.post url Http.emptyBody (D.succeed "")
 
         resultParse r =
             case r of

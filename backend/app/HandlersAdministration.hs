@@ -24,13 +24,17 @@ import Database.Sqlite(SqliteException)
 
 handlerInsertNews :: TokenStateVar -> Integer -> News -> Handler String
 handlerInsertNews tokenStateVar token news = do
-    realToken <- liftIO $ getToken tokenStateVar
+    (realToken, _) <- liftIO $ getToken tokenStateVar
     if realToken /= token
-    then return "Tokens do not match. Access to database denied."
+    then do 
+        liftIO $ print "Someone tried to access with an invalid token. Look at host logs for IP."
+        return "Tokens do not match. Access to database denied."
     else do 
+        liftIO $ print "Tokens matched. I will try to insert to database now."
         let insertAction = insert news :: (MonadIO m) => ReaderT SqlBackend m (Key News)
         let tryAction = (try $ runSqlite "database.db" insertAction) :: IO (Either SqliteException (Key News))
         possiblyKey <- liftIO tryAction
+        liftIO $ print possiblyKey
         case possiblyKey of
             Left e -> return $ "Error happened. " ++ (show e)
             Right key -> return $ "Successfully added to database. Key is " ++ (show key)
@@ -38,10 +42,17 @@ handlerInsertNews tokenStateVar token news = do
 handlerRequestToken :: TokenStateVar -> Handler ()
 handlerRequestToken tokenStateVar = 
     liftIO $ do 
-        token <- getToken tokenStateVar
-        sendEmail ("Tutoring website news editing access token") (mkMessage token)
+        (token, isFresh) <- getToken tokenStateVar
+
+        if isFresh then do
+            print "Sending email with token."
+            sendEmail messageTitle (mkMessage token)
+        else do
+            liftIO $ print "Not enough time passed. Ignoring new token request."
+            return ()
     where 
-        mkMessage token = "Your token is\t" ++ (show token)
+        messageTitle = "Tutoring website news editing access token"
+        mkMessage token = "Your token is " ++ (show token)
 
 redirectAdmin :: Handler String
 redirectAdmin = redirect "/admin.html"

@@ -26,9 +26,7 @@ insertNews model =
             dateCreated = model.currentDate
         }
     in 
-        case String.toInt model.token of 
-            Ok token -> Api.insertNewsCmd news token 
-            Err _    -> Cmd.none
+        Api.insertNewsCmd news model.token
 
 update : AdminMsg -> AdminModel -> (AdminModel, Cmd AdminMsg)
 update msg model =

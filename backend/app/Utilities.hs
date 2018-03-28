@@ -57,10 +57,12 @@ inititalTokenState =
 
 type TokenStateVar = TVar TokenState
 
+type IsTokenFresh = Bool
+
 makeTokenStateVar :: IO TokenStateVar
 makeTokenStateVar = newTVarIO inititalTokenState
 
-getToken :: TokenStateVar -> IO Token
+getToken :: TokenStateVar -> IO (Token, IsTokenFresh)
 getToken tokenStateVar = do
     time <- getCurrentTime
     newToken <- randomRIO (1, 1000000000000)
@@ -71,7 +73,7 @@ getToken tokenStateVar = do
         let newTokenState = tokenState { lastToken = newToken, lastTime = time };
 
         if elapsed <= tokenValidityPeriod tokenState
-        then return $ lastToken tokenState
+        then return (lastToken tokenState, False)
         else do 
             writeTVar tokenStateVar newTokenState
-            return $ lastToken newTokenState
+            return (lastToken newTokenState, True)
