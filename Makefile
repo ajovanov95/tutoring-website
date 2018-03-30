@@ -18,6 +18,8 @@ all:
 	cp backend/$(STACK_BUILD_DIR)/tutoring-backend-exe release/tutoring-backend-exe
 	cp backend/docker-run.sh release/
 run:
+	# export PORT=8000
+	# export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test-db
 	cd release && ./tutoring-backend-exe
 
 docker-build:
@@ -25,14 +27,9 @@ docker-build:
 
 	docker build -t aleksandar-tutoring-website .
 
-# docker volume create volume-database-tutoring
 docker-run:
-	# docker container stop tutoring-backend
-	# docker container rm tutoring-backend
-
 	# port_to:port_from, volume_to:directory_from
 	docker run -d -p 80:8000 \
-	--volume volume-database-tutoring:/home/aleksandar/tutoring-website/ \
 	--name tutoring-backend aleksandar-tutoring-website \
 
 # Actions related to database
@@ -41,9 +38,3 @@ migrate:
 
 test-data:
 	cd release && ./tutoring-backend-exe test-data
-
-drop-data:
-	sqlite3 release/database.db "DROP TABLE news"
-
-dump-sqlite:
-	sqlite3 release/database.db "SELECT * FROM news"

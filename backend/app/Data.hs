@@ -21,11 +21,10 @@ import Data.Maybe(fromJust)
 
 import Database.Persist 
 import Database.Persist.TH
-import Database.Persist.Sqlite(SqlBackend)
+import Database.Persist.Sql
 
 import Control.Monad(mapM, mapM_)
 import Control.Monad.IO.Class(liftIO, MonadIO)
-import Control.Monad.Reader(ReaderT)
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 News
@@ -70,5 +69,5 @@ dummyNews =
             News "Четврта порака" "Пред некој ден врнеше" t1
         ]
 
-insertDummyNewsToDb :: (MonadIO m) => ReaderT SqlBackend m ()
+insertDummyNewsToDb :: (MonadIO m) => SqlPersistT m ()
 insertDummyNewsToDb = mapM_ insert dummyNews

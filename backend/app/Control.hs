@@ -1,7 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE TypeFamilies #-}
 
-module Utilities where
+module Control (AppState(..),
+                sendEmail, 
+                redirect,
+                getToken, 
+                mkAppState,
+                runDatabase) where
 
 import Data
 
@@ -19,9 +25,29 @@ import Control.Concurrent.STM
 
 import System.Random(randomRIO)
 
-import Control.Monad.IO.Class(liftIO)
+import Control.Monad.IO.Class(liftIO, MonadIO)
+
+import Control.Exception(Exception, throw)
+
+import Control.Monad.Logger    (runStderrLoggingT)
+import Database.Persist
+import Database.Persist.Postgresql
 
 type EmailSubject = String
+
+data TokenState = TokenState {
+    lastToken :: Integer,
+    lastTime :: UTCTime,
+    tokenValidityPeriod :: NominalDiffTime
+} deriving (Show)
+
+type TokenStateVar = TVar TokenState
+type IsTokenFresh = Bool
+
+data AppState = AppState {
+    tokenStateVar :: TokenStateVar,
+    databaseUrl :: ConnectionString
+}
 
 sendEmail :: EmailSubject -> MessageContent -> IO ()
 sendEmail emailSubject messageContent = 
@@ -42,25 +68,12 @@ sendEmail emailSubject messageContent =
 redirect :: ByteString -> Handler String
 redirect loc = throwError $ err301 { errHeaders = [("Location", loc)] }
 
-data TokenState = TokenState {
-    lastToken :: Integer,
-    lastTime :: UTCTime,
-    tokenValidityPeriod :: NominalDiffTime
-} deriving (Show)
-
 inititalTokenState =
     let 
         start   = UTCTime (fromJust $ fromGregorianValid 1 1 1) 0
         fifteen = realToFrac $ 15 * 60
     in
         TokenState 0 start fifteen
-
-type TokenStateVar = TVar TokenState
-
-type IsTokenFresh = Bool
-
-makeTokenStateVar :: IO TokenStateVar
-makeTokenStateVar = newTVarIO inititalTokenState
 
 getToken :: TokenStateVar -> IO (Token, IsTokenFresh)
 getToken tokenStateVar = do
@@ -77,3 +90,20 @@ getToken tokenStateVar = do
         else do 
             writeTVar tokenStateVar newTokenState
             return (lastToken newTokenState, True)
+
+mkAppState :: ConnectionString -> IO (AppState)
+mkAppState databaseUrl = do
+    tsv <- newTVarIO inititalTokenState
+
+    return AppState {
+            tokenStateVar = tsv,
+            databaseUrl = databaseUrl };
+
+-- Input type to this function
+-- SqlPersistT (NoLoggingT (ResourceT IO)) a 
+runDatabase databaseUrl actions = do
+    runStderrLoggingT $ 
+        withPostgresqlPool databaseUrl nConnections $ 
+            \pool -> liftIO $ runSqlPersistMPool actions pool
+        where 
+            nConnections = 1

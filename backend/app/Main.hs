@@ -6,11 +6,14 @@
 
 module Main where
 
+import Data.Maybe(isJust, fromJust)
+
 import Network.Wai
 import Network.Wai.Handler.Warp(run)
 
 import Database.Persist
-import Database.Persist.Sqlite
+import Database.Persist.Postgresql
+import Data.ByteString.Char8(pack)
 
 import Servant
 
@@ -21,38 +24,45 @@ import Data
 import Api
 import HandlersUser
 import HandlersAdministration
-import Utilities
+import Control
 
-server :: TokenStateVar -> Server WholeApi
-server tokenStateVariable = 
-    handlerNews  :<|>
-    handlerInsertNews tokenStateVariable :<|>
-    handlerEmail :<|> 
-    handlerRequestToken tokenStateVariable :<|>
+server :: AppState -> Server WholeApi
+server appState = 
+    handlerNews appState :<|>
+    handlerInsertNews appState :<|>
+    handlerEmail appState :<|> 
+    handlerRequestToken appState :<|>
     redirectHome :<|>
     redirectAdmin :<|>
     (serveDirectoryWebApp "static")
 
-app :: TokenStateVar -> Application 
-app tokenStateVariable = wholeApi `serve` (server tokenStateVariable)
+mkApp :: AppState -> Application 
+mkApp appState = serve wholeApi (server appState)
 
 main :: IO ()
 main = do
     args <- getArgs
+    maybePort <- lookupEnv "PORT"
+    maybeDatabaseUrl <- lookupEnv "DATABASE_URL"
 
-    if "migrate" `elem` args then
-        runSqlite "database.db" (runMigration migrateAll)
-    else if "test-data" `elem` args then
-        runSqlite "database.db" insertDummyNewsToDb
-    else do 
-        print $ "Running the server on port " ++ show port
-        cwd  <- getCurrentDirectory
-        print $ "Running in " ++ cwd
-        print $ "Other files in this directory are: "
-        getDirectoryContents cwd >>= print
-
-        tokenStateVariable <- makeTokenStateVar
-
-        -- Run the server
-        run port (app tokenStateVariable)
-    where port = 8000
+    if (not (isJust (maybePort >>= toInt)) || not (isJust maybeDatabaseUrl))
+    then do 
+        print $ "ERROR: I need both $PORT and $DATABASE_URL existing and set to valid values."
+        print $ "Port is " ++ (show maybePort)
+        print $ "Database url is " ++ (show maybeDatabaseUrl) 
+    else do
+        let databaseUrl = pack $ fromJust maybeDatabaseUrl
+        if "migrate" `elem` args then
+            runDatabase databaseUrl (runMigration migrateAll)
+        else if "test-data" `elem` args then
+            runDatabase databaseUrl insertDummyNewsToDb
+        else do 
+            appState <- mkAppState databaseUrl
+            let port = fromJust $ maybePort >>= toInt;
+            print $ "Running the server on port " ++ show port
+            print $ "Comunnicating with database on url " ++ (show databaseUrl)
+            runDatabase databaseUrl (runMigration migrateAll)
+            run port (mkApp appState)
+    where 
+        toInt :: String -> Maybe Int
+        toInt x = Just $ (read x :: Int)

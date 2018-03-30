@@ -9,21 +9,19 @@ module HandlersAdministration where
 
 import Data
 
-import Utilities
+import Control
 
 import Servant
 
-import Control.Exception(try)
+import Control.Exception(try, SomeException)
 
 import Control.Monad.IO.Class(liftIO, MonadIO)
-import Control.Monad.Reader(ReaderT)
 
 import Database.Persist(insert, Key)
-import Database.Persist.Sqlite(runSqlite, SqlBackend)
-import Database.Sqlite(SqliteException)
+import Database.Persist.Sql(SqlPersistT)
 
-handlerInsertNews :: TokenStateVar -> Integer -> News -> Handler String
-handlerInsertNews tokenStateVar token news = do
+handlerInsertNews :: AppState -> Integer -> News -> Handler String
+handlerInsertNews AppState{..} token news = do
     (realToken, _) <- liftIO $ getToken tokenStateVar
     if realToken /= token
     then do 
@@ -31,16 +29,16 @@ handlerInsertNews tokenStateVar token news = do
         return "Tokens do not match. Access to database denied."
     else do 
         liftIO $ print "Tokens matched. I will try to insert to database now."
-        let insertAction = insert news :: (MonadIO m) => ReaderT SqlBackend m (Key News)
-        let tryAction = (try $ runSqlite "database.db" insertAction) :: IO (Either SqliteException (Key News))
+        let insertAction = insert news :: (MonadIO m) => SqlPersistT m (Key News)
+        let tryAction = try $ runDatabase databaseUrl insertAction :: IO (Either SomeException (Key News))
         possiblyKey <- liftIO tryAction
         liftIO $ print possiblyKey
         case possiblyKey of
             Left e -> return $ "Error happened. " ++ (show e)
             Right key -> return $ "Successfully added to database. Key is " ++ (show key)
 
-handlerRequestToken :: TokenStateVar -> Handler ()
-handlerRequestToken tokenStateVar = 
+handlerRequestToken :: AppState -> Handler ()
+handlerRequestToken AppState{..} = 
     liftIO $ do 
         (token, isFresh) <- getToken tokenStateVar
 

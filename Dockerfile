@@ -1,19 +1,21 @@
-# Issues
-# 3. Various open shift stuff
-
-FROM ubuntu:18.04
+FROM ubuntu:16.04
 LABEL Aleksandar Jovanov (aleksandar.jovanov.1995@gmail.com)
 
 # Install dependencies
 RUN apt update
-RUN apt install -y sendemail sqlite3
+RUN apt install -y sendemail 
+RUN apt install -y -f libpq-dev
+
+# RUN apt install -y curl
 
 # Haskell runtime dependencies?
 # Copy code and compile with stack in the image?
 # Compile code approach
 # RUN curl -sSL https://get.haskellstack.org/ | sh
-
-RUN mkdir -p /home/aleksandar/tutoring-website/static
+# RUN mkdir -p /home/aleksandar/tutoring-website/static
+# RUN mkdir -p /home/aleksandar/backend-code
+# COPY backend/* /home/aleksandar/backend-code
+# RUN  cd /home/aleksandar/backend-code/ && stack build && cp .stack-work/**/build/tutoring-backend-exe /home/aleksandar/tutoring-website/tutoring-backend-exe
 
 # copy files frontend
 COPY release/static/images/aleksandar.jpg /home/aleksandar/tutoring-website/static/images/aleksandar.jpg
@@ -25,7 +27,6 @@ COPY release/static/admin.html /home/aleksandar/tutoring-website/static/admin.ht
 COPY release/static/admin.js /home/aleksandar/tutoring-website/static/admin.js
 
 # copy files backend
-COPY release/database.db /home/aleksandar/tutoring-website/database.db
 COPY release/tutoring-backend-exe /home/aleksandar/tutoring-website/tutoring-backend-exe
 COPY release/docker-run.sh /home/aleksandar/tutoring-website/docker-run.sh
 
@@ -33,6 +34,3 @@ RUN chmod +x /home/aleksandar/tutoring-website/docker-run.sh
 
 # Run the server when starting this image
 ENTRYPOINT ["/bin/sh", "/home/aleksandar/tutoring-website/docker-run.sh"]
-
-# EXPOSE port 8000
-EXPOSE 8000
