@@ -1,4 +1,5 @@
 STACK_BUILD_DIR=.stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/tutoring-backend-exe
+POSTGRES_HOST=localhost
 
 all:
 	mkdir -p release/static/
@@ -18,8 +19,8 @@ all:
 	cp backend/$(STACK_BUILD_DIR)/tutoring-backend-exe release/tutoring-backend-exe
 	cp backend/docker-run.sh release/
 run:
-	# export PORT=8000
-	# export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test-db
+	export PORT=8000
+	export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test-db
 	cd release && ./tutoring-backend-exe
 
 docker-build:
@@ -30,6 +31,8 @@ docker-build:
 docker-run:
 	# port_to:port_from, volume_to:directory_from
 	docker run -d -p 80:8000 \
+	-e PORT=8000 \
+	-e DATABASE_URL=postgresql://postgres:postgres@$(POSTGRES_HOST):5432/test-db \
 	--name tutoring-backend aleksandar-tutoring-website \
 
 # Actions related to database

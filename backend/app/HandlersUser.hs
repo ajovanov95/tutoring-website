@@ -27,8 +27,9 @@ import Data.List(groupBy)
 makeNewsGroups :: [News] -> [NewsGroup]
 makeNewsGroups news =
     let
-        year  = fromIntegral . (\(y, _, _) -> y) . toGregorian . utctDay . newsDateCreated
-        month = (\(_, m, _) -> m) . toGregorian . utctDay . newsDateCreated
+        date  = toGregorian . utctDay . newsDateCreated
+        year  = fromIntegral . (\(y, _, _) -> y) . date
+        month = (\(_, m, _) -> m) . date
         
         grps1 = groupBy (\a b -> (year a == year b) && (month a == month b)) news
         grps2 = fmap (\grp -> NewsGroup (year $ head grp) (month $ head grp) grp) grps1
